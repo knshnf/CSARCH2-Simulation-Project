@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IEEE-754 Binary-32 Floating-Point Operation</title>
+</head>
+<body>
+    <h1>IEEE-754 Binary-32 Floating-Point Operation</h1>
+    <h2>SAMPLE HTML ONLY</h2>
+    
+    <form id="form-id">
+        <p>First Operand: 
+            <span><input type="text" placeholder="binary string" id="op-1-bin-id"></span>
+            <!-- <span><input type="text" placeholder="exponent" id="op-1-ex-id"></span> -->
+        </p> 
+        <p>Second Operand: 
+            <span><input type="text" " placeholder="binary string" id="op-2-bin-id"></span>
+            <!-- <span><input type="text" placeholder="exponent" id="op-2-ex-id"></span> -->
+        </p>
+        <input type="radio" id="GRS-id" name="rounding-option" value="GRS"><label for="GRS-id">G/R/S</label><br>
+        <input type="radio" id="RTE-id" name="rounding-option" value="RTE"><label for="RTE-id">Round to Nearest - Ties to Even</label><br>
+        <p>Number of Digits Supported: 
+            <span><input type="text" placeholder="n" id="num-dig-sup-id"></span>
+        </p>
+        <button id="submit-btn-id">Submit</button>
+    </form>
+<script src="IEEE-754.js"></script>
+</body>
+</html>
