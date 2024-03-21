@@ -88,6 +88,26 @@ document.addEventListener("DOMContentLoaded", function(){
         //proceed with GRS or rounding
     }
 
+    //tuples
+    var operand1 = ["", ""];
+    var operand2 = ["", ""];
+
+    function GRS(operand1, operand2, bitNum){
+
+        //difference in exponents 
+        var diff = Math.abs(operand1[1] - operand2[1]);
+        
+        //match the larger exponent
+        if(operand1[1] > operand2[1]){
+            //adjust operand2
+
+        } else if(operand1[1] < operand2[1]){
+            //adjust operand1
+        }
+
+
+    }
+
 });
 
 //notes ni arevalo please dont delete unless ipapasa na or deployment
