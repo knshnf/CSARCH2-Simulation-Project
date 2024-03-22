@@ -60,17 +60,19 @@ $(document).ready(function() {
 
         // 1.a.iiii Perform GRS or Round to Nearest - Ties to Even
         if (roundingChoice === "GRS") {
-            var roundedOperand0 = [roundGRS(shiftedOperand0), shiftedOperand0[1]];
-            var roundedOperand1 = [roundGRS(shiftedOperand1), shiftedOperand1[1]];
+            var roundedOperand0 = [roundGRS(shiftedOperand0, parseInt(digitsSupported)), shiftedOperand0[1]];
+            var roundedOperand1 = [roundGRS(shiftedOperand1, parseInt(digitsSupported)), shiftedOperand1[1]];
         }
-        $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
-        $("#1aiiii-operand1-exponent").text("2^".concat(roundedOperand0[1]));
-        $("#1aiiii-operand2-binary").text(roundedOperand1[0]);
-        $("#1aiiii-operand2-exponent").text("2^".concat(roundedOperand1[1]));
 
         if (roundingChoice === "RTN") {
 
         }
+
+        console.log(roundedOperand0, roundedOperand1)
+        $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
+        $("#1aiiii-operand1-exponent").text("2^".concat(roundedOperand0[1]));
+        $("#1aiiii-operand2-binary").text(roundedOperand1[0]);
+        $("#1aiiii-operand2-exponent").text("2^".concat(roundedOperand1[1]));
 
         // 2 Add two floating point binary
         let sum = addFloatingPointBinary(roundedOperand0, roundedOperand1);
@@ -83,7 +85,7 @@ $(document).ready(function() {
         // 4. Final Answer
 
 
-        $("#solution-steps").toggle();
+        $("#solution-steps").show();
     });
 
     $("#clear-btn").click(function() {
@@ -240,15 +242,13 @@ function GRS(tuple1, tuple2, bitNum) {
 }
 
 function roundGRS(tuple, bitnum) {
-    console.log("roundGRS invoked")
-
     //binary string part
     var binStr = tuple[0];
     //exponent part
-    // var exp = tuple[1];
+    //var exp = tuple[1];
 
-    // var guard, round, sticky = 0
-    var sticky = 0
+    //var guard, round, sticky = 0
+    var sticky = 0;
     var res = '';
 
     // >= required number of bits + grs bits, proceed
