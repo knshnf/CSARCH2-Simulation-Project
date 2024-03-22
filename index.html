@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> IEEE-754 Binary-32 Floating-Point Operation </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="flex flex-col items-center gap-6">
+        <h1 class="text-3xl font-bold m-5"> IEEE-754 Binary-32 Floating-Point Operation </h1>
+
+        <div class="flex flex-col gap-6">
+            <div class="flex gap-2 flex-col sm:flex-row">
+                <h2 class="text-xl font-medium sm:w-52"> First Operand: </h2>
+
+                <div class="flex gap-2">
+                    <input class="border p-1 rounded-md h-8 outline-none" placeholder="Base">
+                    <p class="ml-2 font-bold pt-2"> x 2 ^ </p>
+                    <input class="border  w-32 p-1 rounded-md h-8 outline-none" placeholder="Exponent">
+                </div>
+            </div>
+
+            <div class="flex gap-2 flex-col sm:flex-row">
+                <h2 class="text-xl font-medium sm:w-52"> Second Operand: </h2>
+
+                <div class="flex gap-2">
+                    <input class="border p-1 rounded-md h-8 outline-none" placeholder="Base">
+                    <p class="ml-2 font-bold pt-2"> x 2 ^ </p>
+                    <input class="border flex-grow w-32 p-1 rounded-md h-8 outline-none" placeholder="Exponent">
+                </div>
+            </div>
+
+            <div class="flex gap-2 flex-col sm:flex-row">
+                <h2 class="text-xl font-medium sm:w-52"> Choice of Rounding: </h2>
+
+                <div class="flex gap-2">
+                    <input type="radio" id="GRS" name="rounding_choice" value="GRS">
+                    <label for="html"> G/R/S </label>
+                    <input type="radio" id="RTN" name="rounding_choice" value="RTN">
+                    <label for="css"> Round to Nearest - Ties to Even </label>
+                </div>
+            </div>
+
+            <div class="flex gap-2 flex-col sm:flex-row">
+                <h2 class="text-xl font-medium sm:w-52"> Digits Supported: </h2>
+                <input class="border flex-grow p-1 rounded-md h-8 outline-none" placeholder="Number of Digits Supported">
+            </div>
+
+            <div class="flex justify-center gap-2">
+                <button type="button" class="bg-emerald-400 hover:bg-emerald-500 py-2 px-3 w-24 rounded-lg text-white outline-none focus:outline-none"> Compute </button>
+                <button type="button" class="py-2 px-3 rounded-lg border-transparent focus:border-transparent focus:outline-none w-24"> Clear </button>
+            </div>
+        </div>
+
+
+
+    </div>
+    <script src="IEEE-754.js"></script>
+</body>
+
+</html>
