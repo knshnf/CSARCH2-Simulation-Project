@@ -197,14 +197,7 @@ document.addEventListener("DOMContentLoaded", function(){
         return sum;
     }
 
-    
-    let tuple1 = ["1.00111101", "5"];
-let tuple2 = ["1.00111101", "3"];
-let bitNum = 6;
-
-RTN_TTE(tuple1, tuple2, bitNum);
-
-function RTN_TTE(tuple1, tuple2, bitNum){
+    function RTN_TTE(tuple1, tuple2, bitNum){
         let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
         let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
         console.log(roundedTuple1);
