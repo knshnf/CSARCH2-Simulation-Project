@@ -87,26 +87,54 @@ document.addEventListener("DOMContentLoaded", function(){
 
         //proceed with GRS or rounding
     }
+    //[binary_string, exponent]
+    tuple1 = ["", ""];
+    tuple2 = ["", ""];
 
-    //tuples
-    var operand1 = ["", ""];
-    var operand2 = ["", ""];
-
-    function GRS(operand1, operand2, bitNum){
-
-        //difference in exponents 
-        var diff = Math.abs(operand1[1] - operand2[1]);
+    function GRS(tuple1, tuple2, bitNum){
+        var roundedTuple1 = roundGRS(tuple1, bitNum);
+        var roundedTuple2 = roundGRS(tuple2, bitNum);
+    
+        return [roundedTuple1, roundedTuple2];
         
-        //match the larger exponent
-        if(operand1[1] > operand2[1]){
-            //adjust operand2
-
-        } else if(operand1[1] < operand2[1]){
-            //adjust operand1
-        }
-
-
     }
+    
+    function roundGRS(tuple, bitnum){
+        //binary string part
+        var binStr = tuple[0];
+        //exponent part
+        var exp = tuple[1];
+    
+        var guard, round, sticky = 0
+        var res = '';
+    
+        // >= required number of bits + grs bits, proceed
+        if(binStr.length >= bitnum + 3){
+    
+            // //guard
+            // guard = parseInt(binStr[bitnum + 1]);
+    
+            // //round
+            // round = parent(binStr[bitnum + 2]);
+    
+            //sticky
+            for(let i = bitnum + 2; i < binStr.length; i++){
+                //if non-0, sticky = 1 but it's 0 by default
+                if(binStr[i] == '1'){
+                    sticky = 1;
+                    break;
+                } 
+            }
+            console.log(res);
+            //get required bits + guard and round + sticky
+            return res = binStr.substring(0, bitnum + 2).concat(sticky.toString());
+        } else {
+            console.log(res);
+            return res = binStr;
+        }
+        
+    }
+    
 
 });
 
