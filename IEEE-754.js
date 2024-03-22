@@ -127,9 +127,10 @@ document.addEventListener("DOMContentLoaded", function(){
         //binary string part
         var binStr = tuple[0];
         //exponent part
-        var exp = tuple[1];
+        //var exp = tuple[1];
     
-        var guard, round, sticky = 0
+        //var guard, round, sticky = 0
+        var sticky = 0;
         var res = '';
     
         // >= required number of bits + grs bits, proceed
@@ -151,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function(){
             }
             console.log(res);
             //get required bits + guard and round + sticky
-            return res = binStr.substring(0, bitnum + 2).concat(sticky.toString());
+            return res = binStr.substring(0, bitnum + 3).concat(sticky.toString());
         } else {
             console.log(res);
             return res = binStr;
