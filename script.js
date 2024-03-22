@@ -1,14 +1,14 @@
 $(document).ready(function() {
     $("#submit-btn").click(function() {
-        var operand1Binary = $("#operand-1-binary").val();
-        var operand1Exponent = $("#operand-1-exponent").val();
-        var operand2Binary = $("#operand-2-binary").val();
-        var operand2Exponent = $("#operand-2-exponent").val();
-        var digitsSupported = $("#digits-supported").val();
-        var roundingChoice = $('input[name=rounding_choice]:checked').val()
+        let operand1Binary = $("#operand-1-binary").val();
+        let operand1Exponent = $("#operand-1-exponent").val();
+        let operand2Binary = $("#operand-2-binary").val();
+        let operand2Exponent = $("#operand-2-exponent").val();
+        let digitsSupported = $("#digits-supported").val();
+        let roundingChoice = $('input[name=rounding_choice]:checked').val()
 
-        var binaryRegex = /^[01]+(\.[01]+)?$/;
-        var digitsRegex = /^\d+$/;
+        let binaryRegex = /^[01]+(\.[01]+)?$/;
+        let digitsRegex = /^\d+$/;
 
         if (operand1Binary === "" || operand1Exponent === "" || operand2Binary === "" || operand2Exponent === "" || digitsSupported === "" || roundingChoice === undefined) {
             alert("All fields are required.");
@@ -30,8 +30,60 @@ $(document).ready(function() {
             return;
         }
 
-        alert("Input is valid!");
-        return
+        // Display the inputs
+        $("#solution-operand1-binary").text(operand1Binary);
+        $("#solution-operand1-exponent").text("2^".concat(operand1Exponent));
+        $("#solution-operand2-binary").text(operand2Binary);
+        $("#solution-operand2-exponent").text("2^".concat(operand2Exponent));
+
+        // 1.a.i Normalize both operands
+        let operand0 = [operand1Binary, operand1Exponent];
+        let operand1 = [operand2Binary, operand2Exponent];
+        let [normalizedOperand0, normalizedOperand1] = normalizeBothOperands(operand0, operand1);
+        console.log(normalizeBothOperands(operand0, operand1));
+        $("#1ai-operand1-binary").text(normalizedOperand0[0]);
+        $("#1ai-operand1-exponent").text("2^".concat(normalizedOperand0[1]));
+        $("#1ai-operand2-binary").text(normalizedOperand1[0]);
+        $("#1ai-operand2-exponent").text("2^".concat(normalizedOperand1[1]));
+
+        // 1.a.ii, 1.a.iii
+        $("#1aii-operand1-binary").text(normalizedOperand0[0]);
+        $("#1aii-operand1-exponent").html("2^<span style='color:red'>" + normalizedOperand0[1] + "</span>");
+        $("#1aii-operand2-binary").text(normalizedOperand0[0]);
+        $("#1aii-operand2-exponent").html("2^<span style='color:red'>" + normalizedOperand1[1] + "</span>");
+        let [shiftedOperand0, shiftedOperand1] = compareExponentsThenShift(normalizedOperand0, normalizedOperand1);
+        $("#1aiii-operand1-binary").text(shiftedOperand0[0]);
+        $("#1aiii-operand1-exponent").text("2^".concat(shiftedOperand0[1]));
+        $("#1aiii-operand2-binary").text(shiftedOperand1[0]);
+        $("#1aiii-operand2-exponent").text("2^".concat(shiftedOperand1[1]));
+
+
+        // 1.a.iiii Perform GRS or Round to Nearest - Ties to Even
+        if (roundingChoice === "GRS") {
+            var roundedOperand0 = [roundGRS(shiftedOperand0), shiftedOperand0[1]];
+            var roundedOperand1 = [roundGRS(shiftedOperand1), shiftedOperand1[1]];
+        }
+        $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
+        $("#1aiiii-operand1-exponent").text("2^".concat(roundedOperand0[1]));
+        $("#1aiiii-operand2-binary").text(roundedOperand1[0]);
+        $("#1aiiii-operand2-exponent").text("2^".concat(roundedOperand1[1]));
+
+        if (roundingChoice === "RTN") {
+
+        }
+
+        // 2 Add two floating point binary
+        let sum = addFloatingPointBinary(roundedOperand0, roundedOperand1);
+
+        // 3. Normalize
+        let normalizedSum = normalize(sum);
+
+        // TODO: RTN-TTE the normalizedSum
+
+        // 4. Final Answer
+
+
+        $("#solution-steps").toggle();
     });
 
     $("#clear-btn").click(function() {
@@ -43,3 +95,247 @@ $(document).ready(function() {
         $('input[name=rounding_choice]').prop('checked', false);
     });
 });
+
+// 1.a.i Normalize both operands
+function normalizeBothOperands(operand0, operand1) {
+    console.log("normalizeBothOperands invoked")
+
+    let first_operand_binary = operand0[0]
+    let first_operand_exponent = operand0[1]
+    let second_operand_binary = operand1[0]
+    let second_operand_exponent = operand1[1]
+
+    let first_operand_length = first_operand_binary.length;
+    let first_op_decimal_pos = first_operand_binary.indexOf(".");
+    let second_operand_length = second_operand_binary.length;
+    let second_op_decimal_pos = second_operand_binary.indexOf(".");
+    //console.log("first operand length: " + first_operand_length);
+    let number_digits_supported = $("#digits-supported").val();
+
+    if (first_op_decimal_pos !== 1) {
+        let temp_bin = first_operand_binary.replace(".", "");
+        let one_f = temp_bin.substring(0, 1);
+        let the_rest = temp_bin.substring(1);
+        first_operand_binary = one_f + "." + the_rest;
+        // first_operand_exponent = first_op_decimal_pos - 1;
+        first_operand_exponent = first_operand_exponent + (first_op_decimal_pos - 1);
+        console.log("first operand after normalization: " + first_operand_binary);
+        console.log("first operand after normalization exponent: " + first_operand_exponent);
+    }
+    if (second_op_decimal_pos !== 1) {
+        let temp_bin = second_operand_binary.replace(".", "");
+        let one_f = temp_bin.substring(0, 1);
+        let the_rest = temp_bin.substring(1);
+        second_operand_binary = one_f + "." + the_rest;
+        second_operand_exponent = second_operand_exponent + (second_op_decimal_pos - 1);
+        // second_operand_exponent = second_op_decimal_pos - 1;
+        console.log("second operand after normalization: " + second_operand_binary);
+        console.log("second operand after normalization exponent: " + second_operand_exponent);
+    }
+
+    //padding of zeros
+    if (first_operand_length < parseInt(number_digits_supported) + 1) {
+        for (var i = first_operand_length; i < parseInt(number_digits_supported) + 1; i++) {
+            first_operand_binary += "0";
+        }
+        console.log("first operand after padding of zeros: " + first_operand_binary);
+    }
+
+    if (second_operand_length < parseInt(number_digits_supported) + 1) {
+        for (var i = second_operand_length; i < parseInt(number_digits_supported) + 1; i++) {
+            second_operand_binary += "0";
+        }
+        console.log("second operand after padding of zeros: " + second_operand_binary);
+    }
+
+    // console.log([first_operand_binary, first_operand_exponent], [second_operand_binary, second_operand_exponent])
+    return [
+        [first_operand_binary, first_operand_exponent],
+        [second_operand_binary, second_operand_exponent]
+    ]
+}
+
+// 1.a.i Compare exponents and shift
+function compareExponentsThenShift(operand0, operand1) {
+    console.log("compareExponentsThenShift invoked")
+
+    let first_operand_binary = operand0[0]
+    let first_operand_exponent = operand0[1]
+    let second_operand_binary = operand1[0]
+    let second_operand_exponent = operand1[1]
+
+    if (first_operand_exponent > second_operand_exponent) {
+        let temp_exponent = parseInt(second_operand_exponent);
+        for (let i = second_operand_exponent; i < first_operand_exponent; i++) {
+            second_operand_binary = "0" + second_operand_binary;
+            second_operand_binary = second_operand_binary.slice(0, -1);
+            temp_exponent += 1;
+        }
+        second_operand_exponent = temp_exponent;
+        let temp_bin = second_operand_binary.replace(".", "");
+        let one_f = temp_bin.substring(0, 1);
+        let the_rest = temp_bin.substring(1);
+        second_operand_binary = one_f + "." + the_rest;
+    } else if (first_operand_exponent < second_operand_exponent) {
+        let temp_exponent = parseInt(first_operand_exponent);
+        for (let i = first_operand_exponent; i < second_operand_exponent; i++) {
+            first_operand_binary = "0" + first_operand_binary;
+            first_operand_binary = first_operand_binary.slice(0, -1);
+            temp_exponent += 1;
+        }
+        first_operand_exponent = temp_exponent;
+        let temp_bin = first_operand_binary.replace(".", "");
+        let one_f = temp_bin.substring(0, 1);
+        let the_rest = temp_bin.substring(1);
+        first_operand_binary = one_f + "." + the_rest;
+    }
+
+    console.log([first_operand_binary, first_operand_exponent.toString()], [second_operand_binary, second_operand_exponent.toString()])
+    return [
+        [first_operand_binary, first_operand_exponent.toString()],
+        [second_operand_binary, second_operand_exponent.toString()]
+    ]
+}
+
+function normalize(operand0) {
+    console.log("normalize invoked")
+
+    let first_operand_binary = operand0[0]
+    let first_operand_exponent = operand0[1]
+
+    let first_operand_length = first_operand_binary.length;
+    let first_op_decimal_pos = first_operand_binary.indexOf(".");
+    //console.log("first operand length: " + first_operand_length);
+    let number_digits_supported = $("#digits-supported").val();
+
+    if (first_op_decimal_pos !== 1) {
+        let temp_bin = first_operand_binary.replace(".", "");
+        let one_f = temp_bin.substring(0, 1);
+        let the_rest = temp_bin.substring(1);
+        first_operand_binary = one_f + "." + the_rest;
+        // first_operand_exponent = first_op_decimal_pos - 1;
+        first_operand_exponent = first_operand_exponent + (first_op_decimal_pos - 1);
+        console.log("first operand after normalization: " + first_operand_binary);
+        console.log("first operand after normalization exponent: " + first_operand_exponent);
+    }
+
+    if (first_operand_length < parseInt(number_digits_supported) + 1) {
+        for (var i = first_operand_length; i < parseInt(number_digits_supported) + 1; i++) {
+            first_operand_binary += "0";
+        }
+        console.log("first operand after padding of zeros: " + first_operand_binary);
+    }
+
+
+    console.log([first_operand_binary, first_operand_exponent])
+    return [first_operand_binary, first_operand_exponent]
+}
+
+function GRS(tuple1, tuple2, bitNum) {
+    var roundedTuple1 = roundGRS(tuple1, bitNum);
+    var roundedTuple2 = roundGRS(tuple2, bitNum);
+
+    return [roundedTuple1, roundedTuple2];
+
+}
+
+function roundGRS(tuple, bitnum) {
+    console.log("roundGRS invoked")
+
+    //binary string part
+    var binStr = tuple[0];
+    //exponent part
+    // var exp = tuple[1];
+
+    // var guard, round, sticky = 0
+    var sticky = 0
+    var res = '';
+
+    // >= required number of bits + grs bits, proceed
+    if (binStr.length >= bitnum + 3) {
+
+        // //guard
+        // guard = parseInt(binStr[bitnum + 1]);
+
+        // //round
+        // round = parent(binStr[bitnum + 2]);
+
+        //sticky
+        for (let i = bitnum + 2; i < binStr.length; i++) {
+            //if non-0, sticky = 1 but it's 0 by default
+            if (binStr[i] == '1') {
+                sticky = 1;
+                break;
+            }
+        }
+        console.log(res);
+        //get required bits + guard and round + sticky
+        return res = binStr.substring(0, bitnum + 3).concat(sticky.toString());
+    } else {
+        console.log(res);
+        return res = binStr;
+    }
+}
+
+// Floating Point Addition
+function addFloatingPointBinary(addend1, addend2) {
+    console.log("addFloatingPointBinary invoked")
+
+    // extracts binary str ad exp from tuples
+    let binStr1 = addend1[0];
+    let exp1 = addend1[1];
+    let binStr2 = addend2[0];
+    let exp2 = addend2[1];
+
+    let maxExp = Math.max(exp1, exp2);
+
+    // normalize binary strings to have the same exponent
+    binStr1 = normalizeBinaryString(binStr1, exp1, maxExp);
+    binStr2 = normalizeBinaryString(binStr2, exp2, maxExp);
+
+    let sum = addBinaryStrings(binStr1, binStr2);
+
+    // Normalize the sum
+    let expSum = maxExp;
+    sum = normalizeBinaryString(sum, expSum, maxExp);
+
+    return [sum, expSum];
+}
+
+// Normalize binary string to a specific exponent
+function normalizeBinaryString(binStr, exp, targetExp) {
+    if (exp === targetExp) {
+        return binStr;
+    } else {
+        let diff = Math.abs(targetExp - exp);
+        if (exp < targetExp) {
+            for (let i = 0; i < diff; i++) {
+                binStr = "0" + binStr;
+            }
+        } else {
+            binStr = binStr.slice(diff);
+        }
+        return binStr;
+    }
+}
+
+// Add two binary str
+function addBinaryStrings(binStr1, binStr2) {
+    var sum = "";
+    var carry = 0;
+    var maxLength = Math.max(binStr1.length, binStr2.length);
+
+    for (var i = 0; i < maxLength; i++) {
+        var digit1 = i < binStr1.length ? parseInt(binStr1[binStr1.length - 1 - i]) : 0;
+        var digit2 = i < binStr2.length ? parseInt(binStr2[binStr2.length - 1 - i]) : 0;
+        var digitSum = digit1 + digit2 + carry;
+        carry = Math.floor(digitSum / 2);
+        sum = (digitSum % 2) + sum;
+    }
+
+    if (carry > 0) {
+        sum = carry + sum;
+    }
+
+    return sum;
+}
