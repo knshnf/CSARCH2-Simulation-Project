@@ -249,6 +249,9 @@ document.addEventListener("DOMContentLoaded", function(){
         } else if (lastBit === '1') {
             let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
             return previousTuple + '0';
+        } else if (lastBit === '.') {
+            let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
+            return previousTuple + '.';
         } else {
             console.log('Error: Invalid bit encountered');
             return tuple;
