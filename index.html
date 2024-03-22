@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> IEEE-754 Binary-32 Floating-Point Operation </title>
+    <title> IEEE-754 Binary-32 Floating-Point Addition </title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
@@ -11,7 +11,7 @@
 
 <body>
     <div class="flex flex-col items-center gap-6">
-        <h1 class="text-3xl font-bold m-5"> IEEE-754 Binary-32 Floating-Point Operation </h1>
+        <h1 class="text-3xl font-bold m-5"> IEEE-754 Binary-32 Floating-Point Addition </h1>
 
         <div class="flex flex-col gap-6">
             <div class="flex gap-2 flex-col sm:flex-row">
@@ -51,11 +51,153 @@
             </div>
 
             <div class="flex justify-center gap-2">
-                <button id="submit-btn" type="button" class="bg-emerald-400 hover:bg-emerald-500 py-2 px-3 w-24 rounded-lg text-white outline-none focus:outline-none"> Compute </button>
+                <button id="submit-btn" type="button" class="bg-emerald-500 hover:bg-emerald-400 py-2 px-3 w-24 rounded-lg text-white outline-none focus:outline-none"> Compute </button>
                 <button id="clear-btn" type="button" class="py-2 px-3 rounded-lg border-transparent focus:border-transparent focus:outline-none w-24"> Clear </button>
             </div>
-        </div>
 
+            <div id="solution-steps" class="flex flex-col">
+                <h2 class="text-2xl font-bold my-5 text-center"> Final Answer:
+                    <span class="text-green-600"> 1.1001 x 2^5 </span>
+                </h2>
+
+
+                <div class="flex flex-col bg-white p-5">
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right"> 1.00111101 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right"> 1.00111101 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^3 </p>
+                    </div>
+                </div>
+
+                <h2 class="text-xl font-extrabold my-5"> Solution Steps </h2>
+
+                <h2 class="text-xl font-bold mb-5"> 1. Initial Normalization </h2>
+                <div class="flex flex-col bg-white p-5">
+                    <p class="font-bold mb-2"> Normalize both operands </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right"> 1.00111101 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right"> 1.00111101 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+
+                    <p class="font-bold mb-2 mt-5"> Compare the exponents </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right"> 1.00111101 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right"> 0.0100111 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+
+                    <p class="font-bold mb-2 mt-5"> Shift the number with smaller exponent to match the larger exponent </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right"> 1.00111101 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right"> 0.0100111 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+
+                    <p class="font-bold mb-2 mt-5"> Perform GRS </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right"> 1.0011111 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right"> 0.0100111 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                </div>
+
+
+                <h2 class="text-xl font-bold my-5"> 2. Operation </h2>
+                <div class="flex flex-col bg-white p-5">
+                    <p class="font-bold mb-2"> Add the two operands </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right"> 1.0011111 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right"> 0.0100111 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right">
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSum: </p>
+                        <p class="w-8/12 text-right"> 1.1000110 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                </div>
+
+                <h2 class="text-xl font-bold my-5"> 3. Post operation Normalization </h2>
+                <div class="flex flex-col bg-white p-5">
+                    <p class="font-bold mb-2"> Normalize the sum </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right">
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSum: </p>
+                        <p class="w-8/12 text-right"> 1.1000110 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+
+                    <p class="font-bold mb-2 mt-5"> Round to the appropriate number of bits using RTN-TE </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right">
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSum: </p>
+                        <p class="w-8/12 text-right"> 1.1001 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                </div>
+
+                <h2 class="text-xl font-bold my-5"> 4. Final Answer </h2>
+                <div class="flex flex-col bg-white p-5">
+                    <p class="font-bold mb-2"> Final Answer </p>
+                    <div class="flex flex-row">
+                        <p class="w-fit text-right">
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </p>
+                        <p class="w-8/12 text-right"> 1.1001 </p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12"> 2^5 </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <button id="save-file" type="button" class="bg-emerald-500 hover:bg-emerald-400 py-2 px-3 w-44 rounded-lg text-white outline-none focus:outline-none"> Save to text file </button>
     </div>
     <script src="script.js"></script>
 </body>
