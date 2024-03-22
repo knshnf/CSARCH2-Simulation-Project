@@ -198,7 +198,13 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     
-    function RTN_TTE(tuple1, tuple2, bitNum){
+    let tuple1 = ["1.00111101", "5"];
+let tuple2 = ["1.00111101", "3"];
+let bitNum = 6;
+
+RTN_TTE(tuple1, tuple2, bitNum);
+
+function RTN_TTE(tuple1, tuple2, bitNum){
         let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
         let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
         console.log(roundedTuple1);
@@ -230,26 +236,30 @@ document.addEventListener("DOMContentLoaded", function(){
             
         }
         else{
-            console.log('err');
+            console.log('Error');
         }
     }
 
-    function incrementTuple(tuple){
-        length = tuple.length-1;
-        index = tuple.length-1;
+    function verify(sub1, sub2){
+                
+    }
 
-        if(tuple[index] == '0'){
-            let resultTuple = tuple.substr(0, index) + '1' + tuple.substr(index);
-            return(resultTuple);
+    function incrementTuple(tuple) {
+        if (tuple.length === 0) {
+            return '1';
         }
-        else if (tuple[index] === '1') {
-            let previousTuple = incrementTuple(tuple.substring(0, index-1)); 
-            return previousTuple + '0'; 
+    
+        let lastBit = tuple.charAt(tuple.length - 1);
+    
+        if (lastBit === '0') {
+            return tuple.substring(0, tuple.length - 1) + '1';
+        } else if (lastBit === '1') {
+            let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
+            return previousTuple + '0';
         } else {
             console.log('Error: Invalid bit encountered');
-            return tuple; 
+            return tuple;
         }
-        
     }
     
 
