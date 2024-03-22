@@ -159,7 +159,72 @@ document.addEventListener("DOMContentLoaded", function(){
         
     }
 
+<<<<<<< HEAD
     
+=======
+    //OPERATION
+
+    function addFloatingPointBinary(addend1, addend2) {
+    // extracts binary str ad exp from tuples
+    var binStr1 = addend1[0];
+    var exp1 = addend1[1];
+    var binStr2 = addend2[0];
+    var exp2 = addend2[1];
+        
+    var maxExp = Math.max(exp1, exp2);
+
+    // normalize binary strings to have the same exponent
+    binStr1 = normalizeBinaryString(binStr1, exp1, maxExp);
+    binStr2 = normalizeBinaryString(binStr2, exp2, maxExp);
+
+    var sum = addBinaryStrings(binStr1, binStr2);
+
+    // normalize the sum
+    var expSum = maxExp;
+    sum = normalizeBinaryString(sum, expSum, maxExp);
+
+    return [sum, expSum];
+    }
+
+    // normalize binary string to a specific exponent
+    function normalizeBinaryString(binStr, exp, targetExp) {
+        if (exp === targetExp) {
+            return binStr;
+        } else {
+            var diff = Math.abs(targetExp - exp);
+            if (exp < targetExp) {
+                for (var i = 0; i < diff; i++) {
+                    binStr = "0" + binStr;
+                }
+            } else {
+                binStr = binStr.slice(diff);
+            }
+            return binStr;
+        }
+    }
+    
+    //add two binary str
+    function addBinaryStrings(binStr1, binStr2) {
+        var sum = "";
+        var carry = 0;
+        var maxLength = Math.max(binStr1.length, binStr2.length);
+    
+        for (var i = 0; i < maxLength; i++) {
+            var digit1 = i < binStr1.length ? parseInt(binStr1[binStr1.length - 1 - i]) : 0;
+            var digit2 = i < binStr2.length ? parseInt(binStr2[binStr2.length - 1 - i]) : 0;
+            var digitSum = digit1 + digit2 + carry;
+            carry = Math.floor(digitSum / 2);
+            sum = (digitSum % 2) + sum;
+        }
+    
+        if (carry > 0) {
+            sum = carry + sum;
+        }
+    
+        return sum;
+    }
+
+>>>>>>> 77bc613576f405872d8b39ae28e171fd5e7e10db
     function RTN_TTE(tuple1, tuple2, bitNum){
         let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
         let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
@@ -192,89 +257,36 @@ document.addEventListener("DOMContentLoaded", function(){
             
         }
         else{
-            console.log('err');
+            console.log('Error');
         }
     }
 
-    function incrementTuple(tuple){
-        length = tuple.length-1;
-        index = tuple.length-1;
+    function verify(sub1, sub2){
+                
+    }
 
-        if(tuple[index] == '0'){
-            let resultTuple = tuple.substr(0, index) + '1' + tuple.substr(index);
-            return(resultTuple);
+    function incrementTuple(tuple) {
+        if (tuple.length === 0) {
+            return '1';
         }
-        else if (tuple[index] === '1') {
-            let previousTuple = incrementTuple(tuple.substring(0, index-1)); 
-            return previousTuple + '0'; 
+    
+        let lastBit = tuple.charAt(tuple.length - 1);
+    
+        if (lastBit === '0') {
+            return tuple.substring(0, tuple.length - 1) + '1';
+        } else if (lastBit === '1') {
+            let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
+            return previousTuple + '0';
+        } else if (lastBit === '.') {
+            let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
+            return previousTuple + '.';
         } else {
             console.log('Error: Invalid bit encountered');
-            return tuple; 
+            return tuple;
         }
-        
     }
 
-    //OPERATION
-
-    function addFloatingPointBinary(addend1, addend2) {
-        // extracts binary str ad exp from tuples
-        var binStr1 = addend1[0];
-        var exp1 = addend1[1];
-        var binStr2 = addend2[0];
-        var exp2 = addend2[1];
-            
-        var maxExp = Math.max(exp1, exp2);
-    
-        // normalize binary strings to have the same exponent
-        binStr1 = normalizeBinaryString(binStr1, exp1, maxExp);
-        binStr2 = normalizeBinaryString(binStr2, exp2, maxExp);
-    
-        var sum = addBinaryStrings(binStr1, binStr2);
-    
-        // normalize the sum
-        var expSum = maxExp;
-        sum = normalizeBinaryString(sum, expSum, maxExp);
-    
-        return [sum, expSum];
-        }
-    
-        // normalize binary string to a specific exponent
-        function normalizeBinaryString(binStr, exp, targetExp) {
-            if (exp === targetExp) {
-                return binStr;
-            } else {
-                var diff = Math.abs(targetExp - exp);
-                if (exp < targetExp) {
-                    for (var i = 0; i < diff; i++) {
-                        binStr = "0" + binStr;
-                    }
-                } else {
-                    binStr = binStr.slice(diff);
-                }
-                return binStr;
-            }
-        }
-        
-        //add two binary str
-        function addBinaryStrings(binStr1, binStr2) {
-            var sum = "";
-            var carry = 0;
-            var maxLength = Math.max(binStr1.length, binStr2.length);
-        
-            for (var i = 0; i < maxLength; i++) {
-                var digit1 = i < binStr1.length ? parseInt(binStr1[binStr1.length - 1 - i]) : 0;
-                var digit2 = i < binStr2.length ? parseInt(binStr2[binStr2.length - 1 - i]) : 0;
-                var digitSum = digit1 + digit2 + carry;
-                carry = Math.floor(digitSum / 2);
-                sum = (digitSum % 2) + sum;
-            }
-        
-            if (carry > 0) {
-                sum = carry + sum;
-            }
-        
-            return sum;
-        }
+   
     
 
 });
