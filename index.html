@@ -6,6 +6,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.2/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <script language="JavaScript" type="text/javascript" src="jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -17,9 +18,9 @@
                 <h2 class="text-xl font-medium sm:w-52"> First Operand: </h2>
 
                 <div class="flex gap-2">
-                    <input class="border p-1 rounded-md h-8 outline-none" placeholder="Base">
+                    <input id="operand-1-binary" class="border p-1 rounded-md h-8 outline-none" placeholder="Binary">
                     <p class="ml-2 font-bold pt-2"> x 2 ^ </p>
-                    <input class="border  w-32 p-1 rounded-md h-8 outline-none" placeholder="Exponent">
+                    <input id="operand-1-exponent" class="border  w-32 p-1 rounded-md h-8 outline-none" placeholder="Exponent">
                 </div>
             </div>
 
@@ -27,9 +28,9 @@
                 <h2 class="text-xl font-medium sm:w-52"> Second Operand: </h2>
 
                 <div class="flex gap-2">
-                    <input class="border p-1 rounded-md h-8 outline-none" placeholder="Base">
+                    <input id="operand-2-binary" class="border p-1 rounded-md h-8 outline-none" placeholder="Binary">
                     <p class="ml-2 font-bold pt-2"> x 2 ^ </p>
-                    <input class="border flex-grow w-32 p-1 rounded-md h-8 outline-none" placeholder="Exponent">
+                    <input id="operand-2-exponent" class="border flex-grow w-32 p-1 rounded-md h-8 outline-none" placeholder="Exponent">
                 </div>
             </div>
 
@@ -46,19 +47,17 @@
 
             <div class="flex gap-2 flex-col sm:flex-row">
                 <h2 class="text-xl font-medium sm:w-52"> Digits Supported: </h2>
-                <input class="border flex-grow p-1 rounded-md h-8 outline-none" placeholder="Number of Digits Supported">
+                <input id="digits-supported" class="border flex-grow p-1 rounded-md h-8 outline-none" placeholder="Number of Digits Supported">
             </div>
 
             <div class="flex justify-center gap-2">
                 <button type="button" class="bg-emerald-400 hover:bg-emerald-500 py-2 px-3 w-24 rounded-lg text-white outline-none focus:outline-none"> Compute </button>
-                <button type="button" class="py-2 px-3 rounded-lg border-transparent focus:border-transparent focus:outline-none w-24"> Clear </button>
+                <button id="clear-btn" type="button" class="py-2 px-3 rounded-lg border-transparent focus:border-transparent focus:outline-none w-24"> Clear </button>
             </div>
         </div>
 
-
-
     </div>
-    <script src="IEEE-754.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
