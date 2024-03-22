@@ -68,14 +68,19 @@ $(document).ready(function() {
 
         }
 
-        console.log(roundedOperand0, roundedOperand1)
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
         $("#1aiiii-operand1-exponent").text("2^".concat(roundedOperand0[1]));
         $("#1aiiii-operand2-binary").text(roundedOperand1[0]);
         $("#1aiiii-operand2-exponent").text("2^".concat(roundedOperand1[1]));
 
         // 2 Add two floating point binary
+        $("#2-operand1-binary").text(roundedOperand0[0]);
+        $("#2-operand1-exponent").text("2^".concat(roundedOperand0[1]));
+        $("#2-operand2-binary").text(roundedOperand1[0]);
+        $("#2-operand2-exponent").text("2^".concat(roundedOperand1[1]));
         let sum = addFloatingPointBinary(roundedOperand0, roundedOperand1);
+        $("#2-sum-binary").text(sum[0]);
+        $("#2-sum-exponent").text("2^".concat(sum[1]));
 
         // 3. Normalize
         let normalizedSum = normalize(sum);
@@ -95,6 +100,7 @@ $(document).ready(function() {
         $("#operand-2-exponent").val('');
         $("#digits-supported").val('');
         $('input[name=rounding_choice]').prop('checked', false);
+        $("#solution-steps").hide();
     });
 });
 
