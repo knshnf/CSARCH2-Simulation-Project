@@ -131,8 +131,11 @@ document.addEventListener("DOMContentLoaded", function(){
         //testing grs
         // var result;
         // if(rounding_option === "GRS"){
-        //     GRS(first_operand_binary, second_operand_binary, number_digits_supported);
-        //     console.log("grs op1: "+ first_operand_binary + " grs op2: " + second_operand_binary);
+        //     // GRS(first_operand_binary, second_operand_binary, number_digits_supported);
+        //     // console.log("grs op1: "+ first_operand_binary + " grs op2: " + second_operand_binary);
+
+        //     result = GRS(first_operand_binary, second_operand_binary, number_digits_supported);
+        //     console.log("grs op1: "+ result[0] + " grs op2: " + result[1]);
         // }else{
         //     RTN_TTE(first_operand_binary, second_operand_binary, number_digits_supported);
         //     console.log("RTN_TTE op1: "+ first_operand_binary + " RTN_TTE op2: " + second_operand_binary);
@@ -152,8 +155,12 @@ document.addEventListener("DOMContentLoaded", function(){
         var roundedTuple1 = roundGRS(tuple1, bitNum);
         var roundedTuple2 = roundGRS(tuple2, bitNum);
     
-        //return [roundedTuple1, roundedTuple2];
-        return;
+        return [roundedTuple1, roundedTuple2];
+        // console.log("first operand binary grs: " + roundedTuple1);
+        // console.log("secondary operand binary grs: " + roundedTuple2);
+        // tuple1 = roundedTuple1;
+        // tuple2 = roundedTuple2;
+        // return;
         
     }
     
