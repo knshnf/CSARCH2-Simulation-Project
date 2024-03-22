@@ -135,6 +135,60 @@ document.addEventListener("DOMContentLoaded", function(){
         
     }
     
+    function RTN_TTE(tuple1, tuple2, bitNum){
+        let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
+        let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
+        console.log(roundedTuple1);
+        console.log(roundedTuple2);
+        return[roundedTuple1, roundedTuple2];
+    }
+
+    function roundRTN_TTE(tuple, bitNum){
+        let index1 = bitNum + 1;
+        let index2 = bitNum + 2;
+        let resultTuple = "";
+        console.log(tuple[index1] + tuple[index2]);
+        // 01 - round down
+        if(tuple[index1] == '0' && tuple[index2] == '1'){
+            resultTuple = tuple.substr(0,bitNum+1);
+            return[resultTuple,bitNum];
+        }
+
+        // 10 - tie to even
+        else if(tuple[index1] == '1' && tuple[index2] == '0'){
+            resultTuple = tuple.substr(0,bitNum+1);
+            return[resultTuple,bitNum];
+        }
+
+        // 11 - round up
+        else if(tuple[index1] == '1' && tuple[index2] == '1'){
+            resultTuple = incrementTuple(tuple.substr(0,bitNum+1));
+            return[resultTuple,bitNum];
+            
+        }
+        else{
+            console.log('err');
+        }
+    }
+
+    function incrementTuple(tuple){
+        length = tuple.length-1;
+        index = tuple.length-1;
+
+        if(tuple[index] == '0'){
+            let resultTuple = tuple.substr(0, index) + '1' + tuple.substr(index);
+            return(resultTuple);
+        }
+        else if (tuple[index] === '1') {
+            let previousTuple = incrementTuple(tuple.substring(0, index-1)); 
+            return previousTuple + '0'; 
+        } else {
+            console.log('Error: Invalid bit encountered');
+            return tuple; 
+        }
+        
+    }
+    
 
 });
 
