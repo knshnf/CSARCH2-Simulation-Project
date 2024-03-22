@@ -7,8 +7,9 @@ $(document).ready(function() {
         let digitsSupported = $("#digits-supported").val();
         let roundingChoice = $('input[name=rounding_choice]:checked').val()
 
-        let binaryRegex = /^[01]+(\.[01]+)?$/;
+        let binaryRegex = /^-?[01]+(\.[01]+)?$/;
         let digitsRegex = /^\d+$/;
+        let digitsRegexWithNegative = /^-?\d+$/;
 
         if (operand1Binary === "" || operand1Exponent === "" || operand2Binary === "" || operand2Exponent === "" || digitsSupported === "" || roundingChoice === undefined) {
             alert("All fields are required.");
@@ -20,7 +21,7 @@ $(document).ready(function() {
             return;
         }
 
-        if (!digitsRegex.test(operand1Exponent) || !digitsRegex.test(operand2Exponent)) {
+        if (!digitsRegexWithNegative.test(operand1Exponent) || !digitsRegexWithNegative.test(operand2Exponent)) {
             alert("Exponent values should be a number.");
             return;
         }
