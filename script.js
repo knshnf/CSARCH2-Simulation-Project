@@ -85,17 +85,17 @@ $(document).ready(function() {
 
         // 1.a.iiii Perform GRS or Round to Nearest - Ties to Even
         if (roundingChoice === "GRS") {
-            $("#1-perform-binary").text("Perform GRS");
+            $("#1-perform-title").text("Perform GRS");
             fileContentSteps = fileContentSteps.concat("    Perform GRS " + "\n");
             var roundedOperand0 = [roundGRS(shiftedOperand0, parseInt(digitsSupported)), shiftedOperand0[1]];
             var roundedOperand1 = [roundGRS(shiftedOperand1, parseInt(digitsSupported)), shiftedOperand1[1]];
         }
 
         if (roundingChoice === "RTN") {
-            $("#1-perform-binary").text("Perform RTN-TE");
+            $("#1-perform-title").text("Perform RTN-TE");
             fileContentSteps = fileContentSteps.concat("    Perform RTN-TE " + "\n");
-            var roundedOperand0 = [roundRTN_TTE(shiftedOperand0, parseInt(digitsSupported)), parseInt(shiftedOperand0[1])];
-            var roundedOperand1 = [roundRTN_TTE(shiftedOperand1, parseInt(digitsSupported)), parseInt(shiftedOperand1[1])];
+            console.log(shiftedOperand0, shiftedOperand1, digitsSupported);
+            var [roundedOperand0, roundedOperand1] = RTN_TTE(shiftedOperand0, shiftedOperand1, parseInt(digitsSupported));
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
@@ -123,10 +123,10 @@ $(document).ready(function() {
         $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
         fileContentSteps = fileContentSteps.concat("3. POST-OPERATION NORMALIZATION " + "\n");
         fileContentSteps = fileContentSteps.concat("    Normalize the sum " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Sum: " + sum[0] + " x 2^".concat(sum[1]) + "\n\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + normalizedSum[0] + " x 2^".concat(normalizedSum[1]) + "\n\n");
 
-        // TODO: RTN-TTE the normalizedSum
-        var roundedSum = [roundRTN_TTE(normalizedSum, parseInt(digitsSupported)), normalizedSum[1]];
+        // var roundedSum = roundRTN_TTE(normalizedSum[0], parseInt(digitsSupported));
+        var [roundedSum, copy] = RTN_TTE(normalizedSum, normalizedSum, parseInt(digitsSupported));
         $("#3-rounded-binary").text(roundedSum[0]);
         $("#3-rounded-exponent").text("2^".concat(roundedSum[1]));
         fileContentSteps = fileContentSteps.concat("    Round to the appropriate number of bits using RTN-TE " + "\n");
@@ -494,8 +494,8 @@ function addFloatingPointBinary(addend1, addend2) {
 function RTN_TTE(tuple1, tuple2, bitNum) {
     let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
     let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
-    console.log(roundedTuple1);
-    console.log(roundedTuple2);
+    console.log(roundedTuple1); // remove 
+    console.log(roundedTuple2); // remove
     return [roundedTuple1, roundedTuple2];
 }
 
@@ -503,7 +503,7 @@ function roundRTN_TTE(tuple, bitNum) {
     let index1 = bitNum + 1;
     let index2 = bitNum + 2;
     let resultTuple = "";
-    console.log(tuple[index1], tuple[index2]);
+    console.log(tuple[index1] + tuple[index2]); // remove
     // 01 - round down
     if (tuple[index1] == '0') { // index2 doesnt matter since it will round down
         resultTuple = tuple.substr(0, bitNum + 1);
