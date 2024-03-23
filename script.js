@@ -223,6 +223,11 @@ $(document).ready(function() {
                 floored2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported) + 1);
                 var roundedOperand1 = [floored2, shiftedOperand1[1]];
             }
+
+            if (parseInt(digitsSupported) === 1) {
+                var roundedOperand0 = [shiftedOperand0[0].substr(0, 2), shiftedOperand0[1]];
+                var roundedOperand1 = [shiftedOperand1[0].substr(0, 2), shiftedOperand0[1]];
+            }
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
