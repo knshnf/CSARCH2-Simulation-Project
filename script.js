@@ -181,6 +181,48 @@ $(document).ready(function() {
         if (roundingChoice === "FLOOR") {
             $("#1-perform-title").text("Perform Rounding - Floor");
             fileContentSteps = fileContentSteps.concat("    Perform Rounding - Floor " + "\n");
+            let floored1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported));
+            let floored2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported));
+
+            // Operand 1
+            if (operand1IsNegative) {
+                if (shiftedOperand0[0][parseInt(digitsSupported)] === "1") {
+                    floored1 = floored1.concat("1");
+
+                    let pointIndex = floored1.indexOf('.');
+                    let binaryWithoutPointLength = floored1.replace('.', '').length
+
+                    floored1 = addBinary(floored1.replace('.', ''), String("1").padStart(binaryWithoutPointLength, '0'));
+                    floored1 = floored1.substring(0, pointIndex) + '.' + floored1.substring(pointIndex);
+
+                } else {
+                    floored1 = floored1.concat("1");
+                }
+                var roundedOperand0 = [floored1, shiftedOperand0[1]];
+            } else {
+                floored1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported) + 1)
+                var roundedOperand0 = [floored1, shiftedOperand0[1]];
+            }
+
+            // Operand 2
+            if (operand2IsNegative) {
+                if (shiftedOperand1[0][parseInt(digitsSupported)] === "1") {
+                    floored2 = floored2.concat("1");
+
+                    let pointIndex = floored2.indexOf('.');
+                    let binaryWithoutPointLength = floored2.replace('.', '').length
+
+                    floored2 = addBinary(floored2.replace('.', ''), String("1").padStart(binaryWithoutPointLength, '0'));
+                    floored2 = floored2.substring(0, pointIndex) + '.' + floored2.substring(pointIndex);
+
+                } else {
+                    floored2 = floored2.concat("1");
+                }
+                var roundedOperand1 = [floored2, shiftedOperand1[1]];
+            } else {
+                floored2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported) + 1);
+                var roundedOperand1 = [floored2, shiftedOperand1[1]];
+            }
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
