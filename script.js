@@ -290,67 +290,67 @@ function roundGRS(tuple, bitnum) {
 }
 
 // Floating Point Addition
-function addFloatingPointBinary(addend1, addend2) {
-    console.log("addFloatingPointBinary invoked")
+// function addFloatingPointBinary(addend1, addend2) {
+//     console.log("addFloatingPointBinary invoked")
 
-    // extracts binary str ad exp from tuples
-    let binStr1 = addend1[0];
-    let exp1 = addend1[1];
-    let binStr2 = addend2[0];
-    let exp2 = addend2[1];
+//     // extracts binary str ad exp from tuples
+//     let binStr1 = addend1[0];
+//     let exp1 = addend1[1];
+//     let binStr2 = addend2[0];
+//     let exp2 = addend2[1];
 
-    let maxExp = Math.max(exp1, exp2);
+//     let maxExp = Math.max(exp1, exp2);
 
-    // normalize binary strings to have the same exponent
-    binStr1 = normalizeBinaryString(binStr1, exp1, maxExp);
-    binStr2 = normalizeBinaryString(binStr2, exp2, maxExp);
+//     // normalize binary strings to have the same exponent
+//     binStr1 = normalizeBinaryString(binStr1, exp1, maxExp);
+//     binStr2 = normalizeBinaryString(binStr2, exp2, maxExp);
 
-    let sum = addBinaryStrings(binStr1, binStr2);
+//     let sum = addBinaryStrings(binStr1, binStr2);
 
-    // Normalize the sum
-    let expSum = maxExp;
-    sum = normalizeBinaryString(sum, expSum, maxExp);
+//     // Normalize the sum
+//     let expSum = maxExp;
+//     sum = normalizeBinaryString(sum, expSum, maxExp);
 
-    return [sum, expSum];
-}
+//     return [sum, expSum];
+// }
 
-// Normalize binary string to a specific exponent
-function normalizeBinaryString(binStr, exp, targetExp) {
-    if (exp === targetExp) {
-        return binStr;
-    } else {
-        let diff = Math.abs(targetExp - exp);
-        if (exp < targetExp) {
-            for (let i = 0; i < diff; i++) {
-                binStr = "0" + binStr;
-            }
-        } else {
-            binStr = binStr.slice(diff);
-        }
-        return binStr;
-    }
-}
+// // Normalize binary string to a specific exponent
+// function normalizeBinaryString(binStr, exp, targetExp) {
+//     if (exp === targetExp) {
+//         return binStr;
+//     } else {
+//         let diff = Math.abs(targetExp - exp);
+//         if (exp < targetExp) {
+//             for (let i = 0; i < diff; i++) {
+//                 binStr = "0" + binStr;
+//             }
+//         } else {
+//             binStr = binStr.slice(diff);
+//         }
+//         return binStr;
+//     }
+// }
 
-// Add two binary str
-function addBinaryStrings(binStr1, binStr2) {
-    var sum = "";
-    var carry = 0;
-    var maxLength = Math.max(binStr1.length, binStr2.length);
+// // Add two binary str
+// function addBinaryStrings(binStr1, binStr2) {
+//     var sum = "";
+//     var carry = 0;
+//     var maxLength = Math.max(binStr1.length, binStr2.length);
 
-    for (var i = 0; i < maxLength; i++) {
-        var digit1 = i < binStr1.length ? parseInt(binStr1[binStr1.length - 1 - i]) : 0;
-        var digit2 = i < binStr2.length ? parseInt(binStr2[binStr2.length - 1 - i]) : 0;
-        var digitSum = digit1 + digit2 + carry;
-        carry = Math.floor(digitSum / 2);
-        sum = (digitSum % 2) + sum;
-    }
+//     for (var i = 0; i < maxLength; i++) {
+//         var digit1 = i < binStr1.length ? parseInt(binStr1[binStr1.length - 1 - i]) : 0;
+//         var digit2 = i < binStr2.length ? parseInt(binStr2[binStr2.length - 1 - i]) : 0;
+//         var digitSum = digit1 + digit2 + carry;
+//         carry = Math.floor(digitSum / 2);
+//         sum = (digitSum % 2) + sum;
+//     }
 
-    if (carry > 0) {
-        sum = carry + sum;
-    }
+//     if (carry > 0) {
+//         sum = carry + sum;
+//     }
 
-    return sum;
-}
+//     return sum;
+// }
 
 // Input (0.f or 1.f, int)
 function checkif32Bits(binaryString, exponent) {
@@ -383,4 +383,62 @@ function checkif32Bits(binaryString, exponent) {
     }
 
     return true;
+}
+
+// Javascript has no native support for big binary numbers
+// https://stackoverflow.com/questions/40353000/javascript-add-two-binary-numbers-returning-binary
+function halfAdder(a, b) {
+    const sum = xor(a, b);
+    const carry = and(a, b);
+    return [sum, carry];
+}
+
+function fullAdder(a, b, carry) {
+    halfAdd = halfAdder(a, b);
+    const sum = xor(carry, halfAdd[0]);
+    carry = and(carry, halfAdd[0]);
+    carry = or(carry, halfAdd[1]);
+    return [sum, carry];
+}
+
+function xor(a, b) { return (a === b ? 0 : 1); }
+
+function and(a, b) { return a == 1 && b == 1 ? 1 : 0; }
+
+function or(a, b) { return (a || b); }
+
+function addBinary(a, b) {
+
+    let sum = '';
+    let carry = '';
+
+    for (var i = a.length - 1; i >= 0; i--) {
+        if (i == a.length - 1) {
+            //half add the first pair
+            const halfAdd1 = halfAdder(a[i], b[i]);
+            sum = halfAdd1[0] + sum;
+            carry = halfAdd1[1];
+        } else {
+            //full add the rest
+            const fullAdd = fullAdder(a[i], b[i], carry);
+            sum = fullAdd[0] + sum;
+            carry = fullAdd[1];
+        }
+    }
+
+    return carry ? carry + sum : sum;
+}
+
+function addFloatingPointBinary(addend1, addend2) {
+    // Assuming addend1 and addend2 are already normalized
+    let binStr1 = addend1[0];
+    let exp1 = addend1[1];
+    let binStr2 = addend2[0];
+    let exp2 = addend2[1];
+
+    let mantissaLength = binStr1.length - 2;
+    let res = addBinary(binStr1.replace('.', ''), binStr2.replace('.', ''))
+    console.log(res);
+    let result = res.slice(0, res.length - mantissaLength) + "." + res.slice(res.length - mantissaLength, res.length);
+    return [result, exp1];
 }
