@@ -31,6 +31,11 @@ $(document).ready(function() {
             return;
         }
 
+        if (!checkif32Bits(operand1Binary, parseInt(operand1Exponent)) || !checkif32Bits(operand2Binary, parseInt(operand2Exponent))) {
+            alert("Operands should be within 32 bits.");
+            return;
+        }
+
         // Display the inputs
         $("#solution-operand1-binary").text(operand1Binary);
         $("#solution-operand1-exponent").text("2^".concat(operand1Exponent));
@@ -345,4 +350,55 @@ function addBinaryStrings(binStr1, binStr2) {
     }
 
     return sum;
+}
+
+// Input (0.f or 1.f, int)
+function checkif32Bits(binaryString, exponent) {
+    console.log("checkif32Bits invoked");
+
+    // Normalize the binary string to 1.f
+    if (binaryString[0] === '1') {
+        let decimalPointIndex = binaryString.indexOf('.');
+        let shift = decimalPointIndex - 1;
+        var mantissa = binaryString.replace('.', '').substring(1);
+        exponent += shift;
+    } else {
+        let firstOneIndex = binaryString.replace('.', '').indexOf('1')
+        if (firstOneIndex + 1 === binaryString.replace('.', '').length) {
+            var mantissa = binaryString.replace('.', '').substring(firstOneIndex + 1);;
+            exponent -= firstOneIndex;
+        } else {
+            var mantissa = binaryString.replace('.', '').substring(firstOneIndex + 1);
+            exponent -= firstOneIndex;
+        }
+    }
+
+    if (exponent > 127 || exponent < -127) {
+        return false;
+    }
+
+    if (mantissa.length > 23 && (mantissa.substring(23).match(/1/g) || []).length > 0) {
+        console.log("there are 1s past 23 bits");
+        return false;
+    }
+
+    return true;
+}
+
+function removeTrailingZeros(binaryString) {
+    let count = 0;
+    // Iterate from the end of the string
+    for (let i = binaryString.length - 1; i >= 0; i--) {
+        // If the current character is '1', remove it and break the loop
+        if (binaryString[i] === '1') {
+            binaryString = binaryString.substring(0, i) + binaryString.substring(i + 1);
+            break;
+        }
+        // If the current character is '0', count it as removed and remove it
+        if (binaryString[i] === '0') {
+            count++;
+            binaryString = binaryString.substring(0, i) + binaryString.substring(i + 1);
+        }
+    }
+    return [binaryString, count];
 }
