@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var fileContent = "";
     $("#submit-btn").click(function() {
+        fileContent = "";
         $(".temp").remove();
         $(".binary").removeClass("negative");
 
@@ -43,20 +44,27 @@ $(document).ready(function() {
         var operand1IsNegative = false;
         var operand2IsNegative = false;
         var bothOperandsNegative = false;
+        var operand1sign = "";
+        var operand2sign = "";
+        var sign = "";
+
         if (operand1Binary.charAt(0) === '-') {
             operand1IsNegative = true;
             operand1Binary = operand1Binary.substring(1);
             $("#solution-operand1-binary").addClass("negative")
+            operand1sign = "-";
         }
         if (operand2Binary.charAt(0) === '-') {
             operand2IsNegative = true;
             operand2Binary = operand2Binary.substring(1);
             $("#solution-operand2-binary").addClass("negative")
+            operand2sign = "-";
         }
 
         if (operand1IsNegative && operand2IsNegative) {
             bothOperandsNegative = true;
             $(".binary").addClass("negative");
+            sign = "-";
 
         } else if (operand1IsNegative) {
             var twosComplement = twosComplementBinaryFloat(operand1Binary)
@@ -66,14 +74,15 @@ $(document).ready(function() {
 
         fileContent = fileContent.concat("IEEE-754 Binary-32 Floating-Point Addition\n\n");
         var fileContentSteps = ""
+        fileContentSteps = fileContentSteps.concat("1. INITIAL NORMALIZATION " + "\n");
 
         // Display the inputs
         $("#solution-operand1-binary").text(operand1Binary);
         $("#solution-operand1-exponent").text("2^".concat(operand1Exponent));
         $("#solution-operand2-binary").text(operand2Binary);
         $("#solution-operand2-exponent").text("2^".concat(operand2Exponent));
-        fileContent = fileContent.concat("Operand 1: " + operand1Binary + " x 2^".concat(operand1Exponent) + "\n");
-        fileContent = fileContent.concat("Operand 2: " + operand2Binary + " x 2^".concat(operand2Exponent) + "\n");
+        fileContent = fileContent.concat("Operand 1: " + operand1sign + operand1Binary + " x 2^".concat(operand1Exponent) + "\n");
+        fileContent = fileContent.concat("Operand 2: " + operand2sign + operand2Binary + " x 2^".concat(operand2Exponent) + "\n");
         fileContent = fileContent.concat("Choice of Rounding: " + roundingChoice + "\n");
         fileContent = fileContent.concat("Digits Supported: " + digitsSupported + "\n\n");
 
@@ -98,6 +107,11 @@ $(document).ready(function() {
                 </div>`;
             $("#1-container").prepend(htmlContent);
             operand0 = [twosComplement, operand0[1]]
+
+            fileContentSteps = fileContentSteps.concat("    Get the twos complement of the negative operand " + "\n");
+            fileContentSteps = fileContentSteps.concat("    Operand 1: " + twosComplement + " x 2^".concat(operand0[1]) + "\n");
+            fileContentSteps = fileContentSteps.concat("    Operand 2: " + operand1[0] + " x 2^".concat(operand1[1]) + "\n\n");
+
         } else if (!bothOperandsNegative && operand2IsNegative) {
             let htmlContent = `
                     <p class="font-bold mb-2 temp"> Get the twos complement of the negative operand </p>
@@ -115,6 +129,10 @@ $(document).ready(function() {
                     </div>`;
             $("#1-container").prepend(htmlContent);
             operand1 = [twosComplement, operand1[1]]
+
+            fileContentSteps = fileContentSteps.concat("    Get the twos complement of the negative operand " + "\n");
+            fileContentSteps = fileContentSteps.concat("    Operand 1: " + operand0[0] + " x 2^".concat(operand0[1]) + "\n");
+            fileContentSteps = fileContentSteps.concat("    Operand 2: " + twosComplement + " x 2^".concat(operand1[1]) + "\n\n");
         }
 
 
@@ -125,10 +143,10 @@ $(document).ready(function() {
         $("#1ai-operand1-exponent").text("2^".concat(normalizedOperand0[1]));
         $("#1ai-operand2-binary").text(normalizedOperand1[0]);
         $("#1ai-operand2-exponent").text("2^".concat(normalizedOperand1[1]));
-        fileContentSteps = fileContentSteps.concat("1. INITIAL NORMALIZATION " + "\n");
+
         fileContentSteps = fileContentSteps.concat("    Normalize both operands " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 1: " + normalizedOperand0[0] + " x 2^".concat(normalizedOperand0[1]) + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 2: " + normalizedOperand1[0] + " x 2^".concat(normalizedOperand1[1]) + "\n\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + sign + normalizedOperand0[0] + " x 2^".concat(normalizedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + sign + normalizedOperand1[0] + " x 2^".concat(normalizedOperand1[1]) + "\n\n");
 
         // 1.a.ii, 1.a.iii
         $("#1aii-operand1-binary").text(normalizedOperand0[0]);
@@ -141,12 +159,12 @@ $(document).ready(function() {
         $("#1aiii-operand2-binary").text(shiftedOperand1[0]);
         $("#1aiii-operand2-exponent").text("2^".concat(shiftedOperand1[1]));
         fileContentSteps = fileContentSteps.concat("    Compare the Exponents " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 1: " + normalizedOperand0[0] + " x 2^".concat(normalizedOperand0[1]) + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 2: " + normalizedOperand1[0] + " x 2^".concat(normalizedOperand1[1]) + "\n\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + sign + normalizedOperand0[0] + " x 2^".concat(normalizedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + sign + normalizedOperand1[0] + " x 2^".concat(normalizedOperand1[1]) + "\n\n");
 
         fileContentSteps = fileContentSteps.concat("    Shift the number with smaller exponent to match the larger exponent " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 1: " + shiftedOperand0[0] + " x 2^".concat(shiftedOperand0[1]) + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 2: " + shiftedOperand1[0] + " x 2^".concat(shiftedOperand1[1]) + "\n\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + sign + shiftedOperand0[0] + " x 2^".concat(shiftedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + sign + shiftedOperand1[0] + " x 2^".concat(shiftedOperand1[1]) + "\n\n");
 
 
         // 1.a.iiii Perform GRS or Round to Nearest - Ties to Even
@@ -179,8 +197,8 @@ $(document).ready(function() {
             let ceiled1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported));
             let ceiled2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported));
 
-            if(operand1IsNegative) {
-                if(shiftedOperand0[0][parseInt(digitsSupported)] === "1"){
+            if (operand1IsNegative) {
+                if (shiftedOperand0[0][parseInt(digitsSupported)] === "1") {
                     ceiled1 = ceiled1.concat("1");
 
                     let pointIndex = ceiled1.indexOf('.');
@@ -272,8 +290,8 @@ $(document).ready(function() {
         $("#1aiiii-operand1-exponent").text("2^".concat(roundedOperand0[1]));
         $("#1aiiii-operand2-binary").text(roundedOperand1[0]);
         $("#1aiiii-operand2-exponent").text("2^".concat(roundedOperand1[1]));
-        fileContentSteps = fileContentSteps.concat("    Operand 1: " + roundedOperand0[0] + " x 2^".concat(roundedOperand0[1]) + "\n");
-        fileContentSteps = fileContentSteps.concat("    Operand 2: " + roundedOperand1[0] + " x 2^".concat(roundedOperand1[1]) + "\n\n\n\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + sign + roundedOperand0[0] + " x 2^".concat(roundedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + sign + roundedOperand1[0] + " x 2^".concat(roundedOperand1[1]) + "\n\n\n\n");
 
         // 2 Add two floating point binary
         $("#2-operand1-binary").text(roundedOperand0[0]);
@@ -285,7 +303,7 @@ $(document).ready(function() {
         $("#2-sum-exponent").text("2^".concat(sum[1]));
         fileContentSteps = fileContentSteps.concat("2. OPERATION " + "\n");
         fileContentSteps = fileContentSteps.concat("    Add the two operands " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Sum: " + sum[0] + " x 2^".concat(sum[1]) + "\n\n\n\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + sign + sum[0] + " x 2^".concat(sum[1]) + "\n\n\n\n");
 
         // 3. Normalize
         let normalizedSum = normalize(sum);
@@ -294,7 +312,7 @@ $(document).ready(function() {
         $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
         fileContentSteps = fileContentSteps.concat("3. POST-OPERATION NORMALIZATION " + "\n");
         fileContentSteps = fileContentSteps.concat("    Normalize the sum " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Sum: " + normalizedSum[0] + " x 2^".concat(normalizedSum[1]) + "\n\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + sign + normalizedSum[0] + " x 2^".concat(normalizedSum[1]) + "\n\n");
 
         // var roundedSum = roundRTN_TTE(normalizedSum[0], parseInt(digitsSupported));
         var [roundedSum, copy] = RTN_TTE(normalizedSum, normalizedSum, parseInt(digitsSupported));
@@ -302,15 +320,15 @@ $(document).ready(function() {
         $("#3-rounded-binary").text(roundedSum[0]);
         $("#3-rounded-exponent").text("2^".concat(roundedSum[1]));
         fileContentSteps = fileContentSteps.concat("    Round to the appropriate number of bits using RTN-TE " + "\n");
-        fileContentSteps = fileContentSteps.concat("    Sum: " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + sign + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n\n");
 
         // 4. Final Answer
         $("#4-final-binary").text(roundedSum[0]);
         $("#4-final-exponent").text("2^".concat(roundedSum[1]));
         $("#final-answer").text(roundedSum[0] + " " + "x 2^".concat(roundedSum[1]));
         fileContentSteps = fileContentSteps.concat("4. FINAL ANSWER " + "\n");
-        fileContentSteps = fileContentSteps.concat("    " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n");
-        fileContent = fileContent.concat("Final Answer: " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n")
+        fileContentSteps = fileContentSteps.concat("    " + sign + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n");
+        fileContent = fileContent.concat("Final Answer: " + sign + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n")
         fileContent = fileContent.concat(fileContentSteps);
 
         $("#solution-steps").show();
