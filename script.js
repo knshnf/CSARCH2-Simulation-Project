@@ -179,7 +179,7 @@ $(document).ready(function() {
             let ceiled1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported));
             let ceiled2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported));
 
-            if(operand1IsNegative) {
+            if(!operand1IsNegative) {
                 if(shiftedOperand0[0][parseInt(digitsSupported)] === "1"){
                     ceiled1 = ceiled1.concat("1");
 
@@ -192,11 +192,11 @@ $(document).ready(function() {
                     ceiled1 = ceiled1.concat("1");
                 }
             } else {
-                ceiled1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported) + 1);
+                ceiled1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported + 1));
             }
 
             // Operand 2
-            if (operand2IsNegative) {
+            if (!operand2IsNegative) {
                 if (shiftedOperand1[0][parseInt(digitsSupported)] === "1") {
                     ceiled2 = ceiled2.concat("1");
 
