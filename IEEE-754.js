@@ -25,6 +25,21 @@ document.addEventListener("DOMContentLoaded", function(){
         console.log("number of digits supported: " + number_digits_supported);
 
         //Initial Normalization
+
+
+        var f_bin_is_neg = false;
+        var s_bin_is_neg = false;
+        //negative
+        if(first_operand_binary.charAt(0) === '-'){
+            f_bin_is_neg = true;
+            first_operand_binary = first_operand_binary.substring(1);
+            console.log("First character removed. New value: " + first_operand_binary);
+        }
+        if(second_operand_binary.charAt(0) === '-'){
+            s_bin_is_neg = true;
+            second_operand_binary = second_operand_binary.substring(1);
+            console.log("First character removed. New value: " + second_operand_binary);
+        }
         
         //normalization of both operands
         var first_operand_length = first_operand_binary.length;
@@ -32,6 +47,10 @@ document.addEventListener("DOMContentLoaded", function(){
         var second_operand_length = second_operand_binary.length;
         var second_op_decimal_pos = second_operand_binary.indexOf(".");
         //console.log("first operand length: " + first_operand_length);
+
+        
+        
+
 
         if(first_op_decimal_pos !== 1){
             var temp_bin = first_operand_binary.replace(".", "");
@@ -84,8 +103,49 @@ document.addEventListener("DOMContentLoaded", function(){
             console.log("first operand after normalization exponent: " + first_operand_exponent);
         }
         
+        //padding of zeros
+        if(first_operand_length < parseInt(number_digits_supported)+1){
+            for(var i = first_operand_length; i < parseInt(number_digits_supported)+1; i++){
+                first_operand_binary += "0";
+            }
+            console.log("first operand after padding of zeros: " + first_operand_binary);
+        }
 
-        //proceed with GRS or rounding
+        if(second_operand_length < parseInt(number_digits_supported)+1){
+            for(var i = second_operand_length; i < parseInt(number_digits_supported)+1; i++){
+                second_operand_binary += "0";
+            }
+            console.log("second operand after padding of zeros: " + second_operand_binary);
+        }
+
+        if(f_bin_is_neg === true){
+            first_operand_binary = "-" + first_operand_binary;
+            console.log("first operand returning the negative sign: " + first_operand_binary);
+        }
+
+        if(s_bin_is_neg === true){
+            second_operand_binary = "-" + second_operand_binary;
+            console.log("second operand returning the negative sign: " + second_operand_binary);
+        }
+
+        //testing grs
+        var result;
+        if(rounding_option === "GRS"){
+            result = GRS([first_operand_binary, first_operand_exponent], [second_operand_binary, second_operand_exponent], parseInt(number_digits_supported));
+            console.log("grs op1: "+ result[0] + " grs op2: " + result[1]);
+            first_operand_binary = result[0];
+            second_operand_binary = result[1];
+            console.log("grs op1: "+ first_operand_binary + " grs op2: " + second_operand_binary);
+        }else{
+            RTN_TTE(first_operand_binary, second_operand_binary, number_digits_supported);
+            console.log("RTN_TTE op1: "+ first_operand_binary + " RTN_TTE op2: " + second_operand_binary);
+        }
+
+        //testing addition operation
+        // var sum = addFloatingPointBinary([first_operand_binary, first_operand_exponent], [second_operand_binary, second_operand_exponent]);
+        // console.log("sum of operands binary: " + sum[0] + " exponent: " + sum[1]);
+
+        //end of testing
     }
     //[binary_string, exponent]
     tuple1 = ["", ""];
@@ -95,17 +155,17 @@ document.addEventListener("DOMContentLoaded", function(){
         var roundedTuple1 = roundGRS(tuple1, bitNum);
         var roundedTuple2 = roundGRS(tuple2, bitNum);
     
-        return [roundedTuple1, roundedTuple2];
-        
+        return [roundedTuple1, roundedTuple2];        
     }
     
     function roundGRS(tuple, bitnum){
         //binary string part
         var binStr = tuple[0];
         //exponent part
-        var exp = tuple[1];
+        //var exp = tuple[1];
     
-        var guard, round, sticky = 0
+        //var guard, round, sticky = 0
+        var sticky = 0;
         var res = '';
     
         // >= required number of bits + grs bits, proceed
@@ -127,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function(){
             }
             console.log(res);
             //get required bits + guard and round + sticky
-            return res = binStr.substring(0, bitnum + 2).concat(sticky.toString());
+            return res = binStr.substring(0, bitnum + 3).concat(sticky.toString());
         } else {
             console.log(res);
             return res = binStr;
@@ -143,6 +203,11 @@ document.addEventListener("DOMContentLoaded", function(){
     var exp1 = addend1[1];
     var binStr2 = addend2[0];
     var exp2 = addend2[1];
+
+    console.log("binstr1: " + binStr1);
+    console.log("exp1: " + exp1);
+    console.log("binstr2: " + binStr2);
+    console.log("exp2: " + exp2);
         
     var maxExp = Math.max(exp1, exp2);
 
@@ -263,6 +328,8 @@ document.addEventListener("DOMContentLoaded", function(){
             return tuple;
         }
     }
+
+   
     
 
 });
