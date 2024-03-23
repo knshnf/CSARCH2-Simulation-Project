@@ -565,43 +565,87 @@ function addFloatingPointBinary(addend1, addend2) {
 }
 
 function RTN_TTE(tuple1, tuple2, bitNum) {
-    let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
-    let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
+    let negTuple1 = isNegative(tuple1[0]);
+    let negTuple2 = isNegative(tuple2[0]);
+    console.log(negTuple1);
+
+    if (negTuple1 == true) {
+        tuple1[0] = removeNegative(tuple1[0]);
+    }
+    if (negTuple2 == true) {
+        tuple2[0] = removeNegative(tuple2[0]);
+    }
+
+    let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum, negTuple1);
+    let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum, negTuple2);
+
+    if (negTuple1 == true) {
+        roundedTuple1[0] = addNegative(roundedTuple1[0]);
+    }
+    if (negTuple2 == true) {
+        roundedTuple2[0] = addNegative(roundedTuple2[0]);
+    }
+
     console.log(roundedTuple1); // remove 
     console.log(roundedTuple2); // remove
     return [roundedTuple1, roundedTuple2];
 }
 
-function roundRTN_TTE(tuple, bitNum) {
+function roundRTN_TTE(tuple, bitNum, negative) {
     if (tuple.length - 1 === bitNum) {
         return [tuple, bitNum];
     }
-
     let index1 = bitNum + 1;
     let index2 = bitNum + 2;
     let resultTuple = "";
     console.log(tuple[index1] + tuple[index2]); // remove
-    // 01 - round down
-    if (tuple[index1] == '0') { // index2 doesnt matter since it will round down
-        resultTuple = tuple.substr(0, bitNum + 1);
-        return [resultTuple, bitNum];
-    }
 
-    // 10 - tie to even
-    else if (tuple[index1] == '1' && isMiddle(tuple, index2) == true) {
-        resultTuple = tuple.substr(0, bitNum + 1);
-        return [resultTuple, bitNum];
-    }
+    if (negative == false) {
+        // 01 - round down
+        if (tuple[index1] == '0') { // index2 doesnt matter since it will round down
+            resultTuple = tuple.substr(0, bitNum + 1);
+            return [resultTuple, bitNum];
+        }
 
-    // 11 - round up
-    else if (tuple[index1] == '1' && isMiddle(tuple, index2) == false) {
-        resultTuple = incrementTuple(tuple.substr(0, bitNum + 1));
-        return [resultTuple, bitNum];
+        // 10 - tie to even
+        else if (tuple[index1] == '1' && isMiddle(tuple, index2) == true) {
+            resultTuple = tuple.substr(0, bitNum + 1);
+            return [resultTuple, bitNum];
+        }
 
+        // 11 - round up
+        else if (tuple[index1] == '1' && isMiddle(tuple, index2) == false) {
+            resultTuple = incrementTuple(tuple.substr(0, bitNum + 1));
+            return [resultTuple, bitNum];
+
+        } else {
+            console.log('Error');
+            return true;
+        }
     } else {
-        console.log('Error');
-        return true;
+        // 01 - round up
+        if (tuple[index1] == '0') { // index2 doesnt matter since it will round down
+            resultTuple = incrementTuple(tuple.substr(0, bitNum + 1));
+            return [resultTuple, bitNum];
+        }
+
+        // 10 - tie to even
+        else if (tuple[index1] == '1' && isMiddle(tuple, index2) == true) {
+            resultTuple = tuple.substr(0, bitNum + 1);
+            return [resultTuple, bitNum];
+        }
+
+        // 11 - round up
+        else if (tuple[index1] == '1' && isMiddle(tuple, index2) == false) {
+            resultTuple = tuple.substr(0, bitNum + 1);
+            return [resultTuple, bitNum];
+        } else {
+            console.log('Error');
+            return true;
+        }
     }
+
+
 }
 
 function isMiddle(tuple, index2) { // cycle through the string to confirm if all are zeroes
@@ -632,6 +676,21 @@ function incrementTuple(tuple) {
         console.log('Error: Invalid bit encountered');
         return tuple;
     }
+}
+
+function isNegative(tuple) {
+    if (tuple[0] == '-') {
+        return true;
+    }
+    return false;
+}
+
+function removeNegative(tuple) {
+    return (tuple.substring(1, tuple.length - 1));
+}
+
+function addNegative(tuple) {
+    return ('-' + tuple);
 }
 
 function download(filename, text) {
