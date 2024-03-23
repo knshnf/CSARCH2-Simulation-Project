@@ -66,12 +66,15 @@ $(document).ready(function() {
 
         // 1.a.iiii Perform GRS or Round to Nearest - Ties to Even
         if (roundingChoice === "GRS") {
+            $("#1-perform-binary").text("Perform GRS");
             var roundedOperand0 = [roundGRS(shiftedOperand0, parseInt(digitsSupported)), shiftedOperand0[1]];
             var roundedOperand1 = [roundGRS(shiftedOperand1, parseInt(digitsSupported)), shiftedOperand1[1]];
         }
 
         if (roundingChoice === "RTN") {
-            // TODO
+            $("#1-perform-binary").text("Perform RTN-TE");
+            var roundedOperand0 = [roundRTN_TTE(shiftedOperand0, parseInt(digitsSupported)), shiftedOperand0[1]];
+            var roundedOperand1 = [roundRTN_TTE(shiftedOperand1, parseInt(digitsSupported)), shiftedOperand1[1]];
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
@@ -94,8 +97,14 @@ $(document).ready(function() {
         $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
 
         // TODO: RTN-TTE the normalizedSum
+        var roundedSum = [roundRTN_TTE(normalizedSum, parseInt(digitsSupported)), normalizedSum[1]];
+        $("#3-rounded-binary").text(roundedSum[0]);
+        $("#3-rounded-exponent").text("2^".concat(roundedSum[1]));
 
         // 4. Final Answer
+        $("#4-final-binary").text(roundedSum[0]);
+        $("#4-final-exponent").text("2^".concat(roundedSum[1]));
+        $("#final-answer").text(roundedSum[0] + " " + "2^".concat(roundedSum[1]));
 
 
         $("#solution-steps").show();
@@ -380,7 +389,6 @@ function checkif32Bits(binaryString, exponent) {
     }
 
     if (mantissa.length > 23 && (mantissa.substring(23).match(/1/g) || []).length > 0) {
-        console.log("there are 1s past 23 bits");
         return false;
     }
 
@@ -443,4 +451,60 @@ function addFloatingPointBinary(addend1, addend2) {
     console.log(res);
     let result = res.slice(0, res.length - mantissaLength) + "." + res.slice(res.length - mantissaLength, res.length);
     return [result, exp1];
+}
+
+function RTN_TTE(tuple1, tuple2, bitNum) {
+    let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
+    let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
+    console.log(roundedTuple1);
+    console.log(roundedTuple2);
+    return [roundedTuple1, roundedTuple2];
+}
+
+function roundRTN_TTE(tuple, bitNum) {
+    let index1 = bitNum + 1;
+    let index2 = bitNum + 2;
+    let resultTuple = "";
+    console.log(tuple[index1], tuple[index2]);
+    // 01 - round down
+    if (tuple[index1] == '0' && tuple[index2] == '1') {
+        resultTuple = tuple.substr(0, bitNum + 1);
+        return [resultTuple, bitNum];
+    }
+
+    // 10 - tie to even
+    else if (tuple[index1] == '1' && tuple[index2] == '0') {
+        resultTuple = tuple.substr(0, bitNum + 1);
+        return [resultTuple, bitNum];
+    }
+
+    // 11 - round up
+    else if (tuple[index1] == '1' && tuple[index2] == '1') {
+        resultTuple = incrementTuple(tuple.substr(0, bitNum + 1));
+        return [resultTuple, bitNum];
+
+    } else {
+        console.log('Error');
+    }
+}
+
+function incrementTuple(tuple) {
+    if (tuple.length === 0) {
+        return '1';
+    }
+
+    let lastBit = tuple.charAt(tuple.length - 1);
+
+    if (lastBit === '0') {
+        return tuple.substring(0, tuple.length - 1) + '1';
+    } else if (lastBit === '1') {
+        let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
+        return previousTuple + '0';
+    } else if (lastBit === '.') {
+        let previousTuple = incrementTuple(tuple.substring(0, tuple.length - 1));
+        return previousTuple + '.';
+    } else {
+        console.log('Error: Invalid bit encountered');
+        return tuple;
+    }
 }
