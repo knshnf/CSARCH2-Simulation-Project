@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var fileContent = "";
     $("#submit-btn").click(function() {
         let operand1Binary = $("#operand-1-binary").val();
         let operand1Exponent = $("#operand-1-exponent").val();
@@ -36,11 +37,18 @@ $(document).ready(function() {
             return;
         }
 
+        fileContent = fileContent.concat("IEEE-754 Binary-32 Floating-Point Addition\n\n");
+        var fileContentSteps = ""
+
         // Display the inputs
         $("#solution-operand1-binary").text(operand1Binary);
         $("#solution-operand1-exponent").text("2^".concat(operand1Exponent));
         $("#solution-operand2-binary").text(operand2Binary);
         $("#solution-operand2-exponent").text("2^".concat(operand2Exponent));
+        fileContent = fileContent.concat("Operand 1: " + operand1Binary + " x 2^".concat(operand1Exponent) + "\n");
+        fileContent = fileContent.concat("Operand 2: " + operand2Binary + " x 2^".concat(operand2Exponent) + "\n");
+        fileContent = fileContent.concat("Choice of Rounding: " + roundingChoice + "\n");
+        fileContent = fileContent.concat("Digits Supported: " + digitsSupported + "\n\n");
 
         // 1.a.i Normalize both operands
         let operand0 = [operand1Binary, operand1Exponent];
@@ -51,6 +59,10 @@ $(document).ready(function() {
         $("#1ai-operand1-exponent").text("2^".concat(normalizedOperand0[1]));
         $("#1ai-operand2-binary").text(normalizedOperand1[0]);
         $("#1ai-operand2-exponent").text("2^".concat(normalizedOperand1[1]));
+        fileContentSteps = fileContentSteps.concat("1. INITIAL NORMALIZATION " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Normalize both operands " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + normalizedOperand0[0] + " x 2^".concat(normalizedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + normalizedOperand1[0] + " x 2^".concat(normalizedOperand1[1]) + "\n\n");
 
         // 1.a.ii, 1.a.iii
         $("#1aii-operand1-binary").text(normalizedOperand0[0]);
@@ -62,25 +74,36 @@ $(document).ready(function() {
         $("#1aiii-operand1-exponent").text("2^".concat(shiftedOperand0[1]));
         $("#1aiii-operand2-binary").text(shiftedOperand1[0]);
         $("#1aiii-operand2-exponent").text("2^".concat(shiftedOperand1[1]));
+        fileContentSteps = fileContentSteps.concat("    Compare the Exponents " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + normalizedOperand0[0] + " x 2^".concat(normalizedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + normalizedOperand1[0] + " x 2^".concat(normalizedOperand1[1]) + "\n\n");
+
+        fileContentSteps = fileContentSteps.concat("    Shift the number with smaller exponent to match the larger exponent " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + shiftedOperand0[0] + " x 2^".concat(shiftedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + shiftedOperand1[0] + " x 2^".concat(shiftedOperand1[1]) + "\n\n");
 
 
         // 1.a.iiii Perform GRS or Round to Nearest - Ties to Even
         if (roundingChoice === "GRS") {
             $("#1-perform-binary").text("Perform GRS");
+            fileContentSteps = fileContentSteps.concat("    Perform GRS " + "\n");
             var roundedOperand0 = [roundGRS(shiftedOperand0, parseInt(digitsSupported)), shiftedOperand0[1]];
             var roundedOperand1 = [roundGRS(shiftedOperand1, parseInt(digitsSupported)), shiftedOperand1[1]];
         }
 
         if (roundingChoice === "RTN") {
             $("#1-perform-binary").text("Perform RTN-TE");
-            var roundedOperand0 = [roundRTN_TTE(shiftedOperand0, parseInt(digitsSupported)), shiftedOperand0[1]];
-            var roundedOperand1 = [roundRTN_TTE(shiftedOperand1, parseInt(digitsSupported)), shiftedOperand1[1]];
+            fileContentSteps = fileContentSteps.concat("    Perform RTN-TE " + "\n");
+            var roundedOperand0 = [roundRTN_TTE(shiftedOperand0, parseInt(digitsSupported)), parseInt(shiftedOperand0[1])];
+            var roundedOperand1 = [roundRTN_TTE(shiftedOperand1, parseInt(digitsSupported)), parseInt(shiftedOperand1[1])];
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
         $("#1aiiii-operand1-exponent").text("2^".concat(roundedOperand0[1]));
         $("#1aiiii-operand2-binary").text(roundedOperand1[0]);
         $("#1aiiii-operand2-exponent").text("2^".concat(roundedOperand1[1]));
+        fileContentSteps = fileContentSteps.concat("    Operand 1: " + roundedOperand0[0] + " x 2^".concat(roundedOperand0[1]) + "\n");
+        fileContentSteps = fileContentSteps.concat("    Operand 2: " + roundedOperand1[0] + " x 2^".concat(roundedOperand1[1]) + "\n\n\n\n");
 
         // 2 Add two floating point binary
         $("#2-operand1-binary").text(roundedOperand0[0]);
@@ -90,22 +113,33 @@ $(document).ready(function() {
         let sum = addFloatingPointBinary(roundedOperand0, roundedOperand1);
         $("#2-sum-binary").text(sum[0]);
         $("#2-sum-exponent").text("2^".concat(sum[1]));
+        fileContentSteps = fileContentSteps.concat("2. OPERATION " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Add the two operands " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + sum[0] + " x 2^".concat(sum[1]) + "\n\n\n\n");
 
         // 3. Normalize
         let normalizedSum = normalize(sum);
         $("#3-normalized-binary").text(normalizedSum[0]);
         $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
+        fileContentSteps = fileContentSteps.concat("3. POST-OPERATION NORMALIZATION " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Normalize the sum " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + sum[0] + " x 2^".concat(sum[1]) + "\n\n");
 
         // TODO: RTN-TTE the normalizedSum
         var roundedSum = [roundRTN_TTE(normalizedSum, parseInt(digitsSupported)), normalizedSum[1]];
         $("#3-rounded-binary").text(roundedSum[0]);
         $("#3-rounded-exponent").text("2^".concat(roundedSum[1]));
+        fileContentSteps = fileContentSteps.concat("    Round to the appropriate number of bits using RTN-TE " + "\n");
+        fileContentSteps = fileContentSteps.concat("    Sum: " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n\n");
 
         // 4. Final Answer
         $("#4-final-binary").text(roundedSum[0]);
         $("#4-final-exponent").text("2^".concat(roundedSum[1]));
         $("#final-answer").text(roundedSum[0] + " " + "2^".concat(roundedSum[1]));
-
+        fileContentSteps = fileContentSteps.concat("4. FINAL ANSWER " + "\n");
+        fileContentSteps = fileContentSteps.concat("    " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n");
+        fileContent = fileContent.concat("Final Answer: " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n")
+        fileContent = fileContent.concat(fileContentSteps);
 
         $("#solution-steps").show();
     });
@@ -118,6 +152,10 @@ $(document).ready(function() {
         $("#digits-supported").val('');
         $('input[name=rounding_choice]').prop('checked', false);
         $("#solution-steps").hide();
+    });
+
+    $("#save-btn").click(function() {
+        download("output.txt", fileContent);
     });
 });
 
@@ -467,25 +505,35 @@ function roundRTN_TTE(tuple, bitNum) {
     let resultTuple = "";
     console.log(tuple[index1], tuple[index2]);
     // 01 - round down
-    if (tuple[index1] == '0' && tuple[index2] == '1') {
+    if (tuple[index1] == '0') { // index2 doesnt matter since it will round down
         resultTuple = tuple.substr(0, bitNum + 1);
         return [resultTuple, bitNum];
     }
 
     // 10 - tie to even
-    else if (tuple[index1] == '1' && tuple[index2] == '0') {
+    else if (tuple[index1] == '1' && isMiddle(tuple, index2) == true) {
         resultTuple = tuple.substr(0, bitNum + 1);
         return [resultTuple, bitNum];
     }
 
     // 11 - round up
-    else if (tuple[index1] == '1' && tuple[index2] == '1') {
+    else if (tuple[index1] == '1' && isMiddle(tuple, index2) == false) {
         resultTuple = incrementTuple(tuple.substr(0, bitNum + 1));
         return [resultTuple, bitNum];
 
     } else {
         console.log('Error');
+        return true;
     }
+}
+
+function isMiddle(tuple, index2) { // cycle through the string to confirm if all are zeroes
+    for (let i = index2; i < tuple.length; i++) {
+        if (tuple[i] !== '0') {
+            return false;
+        }
+    }
+    return true;
 }
 
 function incrementTuple(tuple) {
@@ -507,4 +555,17 @@ function incrementTuple(tuple) {
         console.log('Error: Invalid bit encountered');
         return tuple;
     }
+}
+
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 }
