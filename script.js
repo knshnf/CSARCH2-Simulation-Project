@@ -71,7 +71,7 @@ $(document).ready(function() {
         }
 
         if (roundingChoice === "RTN") {
-
+            // TODO
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
@@ -90,6 +90,8 @@ $(document).ready(function() {
 
         // 3. Normalize
         let normalizedSum = normalize(sum);
+        $("#3-normalized-binary").text(normalizedSum[0]);
+        $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
 
         // TODO: RTN-TTE the normalizedSum
 
