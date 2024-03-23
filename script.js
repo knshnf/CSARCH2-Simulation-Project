@@ -384,21 +384,3 @@ function checkif32Bits(binaryString, exponent) {
 
     return true;
 }
-
-function removeTrailingZeros(binaryString) {
-    let count = 0;
-    // Iterate from the end of the string
-    for (let i = binaryString.length - 1; i >= 0; i--) {
-        // If the current character is '1', remove it and break the loop
-        if (binaryString[i] === '1') {
-            binaryString = binaryString.substring(0, i) + binaryString.substring(i + 1);
-            break;
-        }
-        // If the current character is '0', count it as removed and remove it
-        if (binaryString[i] === '0') {
-            count++;
-            binaryString = binaryString.substring(0, i) + binaryString.substring(i + 1);
-        }
-    }
-    return [binaryString, count];
-}
