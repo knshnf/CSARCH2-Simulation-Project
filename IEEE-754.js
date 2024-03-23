@@ -265,8 +265,8 @@ document.addEventListener("DOMContentLoaded", function(){
     function RTN_TTE(tuple1, tuple2, bitNum){
         let roundedTuple1 = roundRTN_TTE(tuple1[0], bitNum);
         let roundedTuple2 = roundRTN_TTE(tuple2[0], bitNum);
-        console.log(roundedTuple1);
-        console.log(roundedTuple2);
+        console.log(roundedTuple1);         // remove 
+        console.log(roundedTuple2);         // remove
         return[roundedTuple1, roundedTuple2];
     }
 
@@ -274,32 +274,38 @@ document.addEventListener("DOMContentLoaded", function(){
         let index1 = bitNum + 1;
         let index2 = bitNum + 2;
         let resultTuple = "";
-        console.log(tuple[index1] + tuple[index2]);
+        console.log(tuple[index1] + tuple[index2]);     // remove
         // 01 - round down
-        if(tuple[index1] == '0' && tuple[index2] == '1'){
+        if(tuple[index1] == '0'){ // index2 doesnt matter since it will round down
             resultTuple = tuple.substr(0,bitNum+1);
             return[resultTuple,bitNum];
         }
 
         // 10 - tie to even
-        else if(tuple[index1] == '1' && tuple[index2] == '0'){
+        else if(tuple[index1] == '1' && isMiddle(tuple,index2) == true){   
             resultTuple = tuple.substr(0,bitNum+1);
             return[resultTuple,bitNum];
         }
 
         // 11 - round up
-        else if(tuple[index1] == '1' && tuple[index2] == '1'){
+        else if(tuple[index1] == '1' && isMiddle(tuple,index2) == false){
             resultTuple = incrementTuple(tuple.substr(0,bitNum+1));
             return[resultTuple,bitNum];
             
         }
         else{
             console.log('Error');
+            return true;
         }
     }
 
-    function verify(sub1, sub2){
-                
+    function isMiddle(tuple, index2){  // cycle through the string to confirm if all are zeroes
+        for(let i=index2; i<tuple.length; i++){
+            if(tuple[i] !== '0'){
+                return false;
+            }
+        }
+        return true;
     }
 
     function incrementTuple(tuple) {
