@@ -1,6 +1,9 @@
 $(document).ready(function() {
     var fileContent = "";
     $("#submit-btn").click(function() {
+        $(".temp").remove();
+        $(".binary").removeClass("negative");
+
         let operand1Binary = $("#operand-1-binary").val();
         let operand1Exponent = $("#operand-1-exponent").val();
         let operand2Binary = $("#operand-2-binary").val();
@@ -37,6 +40,30 @@ $(document).ready(function() {
             return;
         }
 
+        var operand1IsNegative = false;
+        var operand2IsNegative = false;
+        var bothOperandsNegative = false;
+        if (operand1Binary.charAt(0) === '-') {
+            operand1IsNegative = true;
+            operand1Binary = operand1Binary.substring(1);
+            $("#solution-operand1-binary").addClass("negative")
+        }
+        if (operand2Binary.charAt(0) === '-') {
+            operand2IsNegative = true;
+            operand2Binary = operand2Binary.substring(1);
+            $("#solution-operand2-binary").addClass("negative")
+        }
+
+        if (operand1IsNegative && operand2IsNegative) {
+            bothOperandsNegative = true;
+            $(".binary").addClass("negative");
+
+        } else if (operand1IsNegative) {
+            var twosComplement = twosComplementBinaryFloat(operand1Binary)
+        } else if (operand2IsNegative) {
+            var twosComplement = twosComplementBinaryFloat(operand2Binary)
+        }
+
         fileContent = fileContent.concat("IEEE-754 Binary-32 Floating-Point Addition\n\n");
         var fileContentSteps = ""
 
@@ -50,9 +77,48 @@ $(document).ready(function() {
         fileContent = fileContent.concat("Choice of Rounding: " + roundingChoice + "\n");
         fileContent = fileContent.concat("Digits Supported: " + digitsSupported + "\n\n");
 
+        let operand0 = [operand1Binary, parseInt(operand1Exponent)];
+        let operand1 = [operand2Binary, parseInt(operand2Exponent)];
+
+        // Get twos complement if one of the operand is negative
+        if (!bothOperandsNegative && operand1IsNegative) {
+            let htmlContent = `
+                <p class="font-bold mb-2 temp"> Get the twos complement of the negative operand </p>
+                <div class="flex flex-row temp">
+                    <p class="w-fit text-right"> Operand 1: </p>
+                    <p class="w-8/12 text-right output-field" style='color:red'>` + twosComplement + `</p>
+                    <p class="w-1/12 text-center"> x </p>
+                    <p class="w-1/12 output-field"> 2^` + operand0[1] + `</p>
+                </div>
+                <div class="flex flex-row temp mb-4">
+                    <p class="w-fit text-right"> Operand 2: </p>
+                    <p class="w-8/12 text-right output-field">` + operand1[0] + `</p>
+                    <p class="w-1/12 text-center"> x </p>
+                    <p class="w-1/12 output-field"> 2^` + operand1[1] + `</p>
+                </div>`;
+            $("#1-container").prepend(htmlContent);
+            operand0 = [twosComplement, operand0[1]]
+        } else if (!bothOperandsNegative && operand2IsNegative) {
+            let htmlContent = `
+                    <p class="font-bold mb-2 temp"> Get the twos complement of the negative operand </p>
+                    <div class="flex flex-row temp">
+                        <p class="w-fit text-right"> Operand 1: </p>
+                        <p class="w-8/12 text-right output-field">` + operand0[0] + `</p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12 output-field"> 2^` + operand0[1] + `</p>
+                    </div>
+                    <div class="flex flex-row temp mb-4">
+                        <p class="w-fit text-right"> Operand 2: </p>
+                        <p class="w-8/12 text-right output-field" style='color:red'>` + twosComplement + `</p>
+                        <p class="w-1/12 text-center"> x </p>
+                        <p class="w-1/12 output-field"> 2^` + operand1[1] + `</p>
+                    </div>`;
+            $("#1-container").prepend(htmlContent);
+            operand1 = [twosComplement, operand1[1]]
+        }
+
+
         // 1.a.i Normalize both operands
-        let operand0 = [operand1Binary, operand1Exponent];
-        let operand1 = [operand2Binary, operand2Exponent];
         let [normalizedOperand0, normalizedOperand1] = normalizeBothOperands(operand0, operand1);
         console.log(normalizeBothOperands(operand0, operand1));
         $("#1ai-operand1-binary").text(normalizedOperand0[0]);
@@ -121,7 +187,7 @@ $(document).ready(function() {
 
         // 3. Normalize
         let normalizedSum = normalize(sum);
-        normalizedSum = [normalizedSum[0], parseInt(normalizedSum[0])];
+        normalizedSum = [normalizedSum[0], parseInt(normalizedSum[1])];
         $("#3-normalized-binary").text(normalizedSum[0]);
         $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
         fileContentSteps = fileContentSteps.concat("3. POST-OPERATION NORMALIZATION " + "\n");
@@ -259,16 +325,19 @@ function compareExponentsThenShift(operand0, operand1) {
 
     console.log([first_operand_binary, first_operand_exponent.toString()], [second_operand_binary, second_operand_exponent.toString()])
     return [
-        [first_operand_binary, first_operand_exponent.toString()],
-        [second_operand_binary, second_operand_exponent.toString()]
+        [first_operand_binary, first_operand_exponent],
+        [second_operand_binary, second_operand_exponent]
     ]
 }
 
 function normalize(operand0) {
-    console.log("normalize invoked")
-
     let first_operand_binary = operand0[0]
     let first_operand_exponent = operand0[1]
+    console.log("normalize invoked")
+    console.log("first operand before normalization: " + first_operand_binary);
+    console.log("first operand before normalization exponent: " + first_operand_exponent);
+
+
 
     let first_operand_length = first_operand_binary.length;
     let first_op_decimal_pos = first_operand_binary.indexOf(".");
@@ -576,4 +645,23 @@ function download(filename, text) {
     element.click();
 
     document.body.removeChild(element);
+}
+
+function twosComplementBinaryFloat(binary) {
+    let binaryArray = binary.split('');
+    for (let i = 0; i < binaryArray.length; i++) {
+        if (binaryArray[i] === '0') {
+            binaryArray[i] = '1';
+        } else if (binaryArray[i] === '1') {
+            binaryArray[i] = '0';
+        }
+    }
+    let onesComplement = binaryArray.join('');
+    let pointIndex = binary.indexOf('.');
+
+    let binaryWithoutPointLength = onesComplement.replace('.', '').length
+    let twosComplement = addBinary(onesComplement.replace('.', ''), String("1").padStart(binaryWithoutPointLength, '0'));
+    twosComplement = twosComplement.substring(0, pointIndex) + '.' + twosComplement.substring(pointIndex);
+    console.log(twosComplement);
+    return twosComplement;
 }
