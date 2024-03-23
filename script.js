@@ -133,7 +133,7 @@ $(document).ready(function() {
         // 1.a.ii, 1.a.iii
         $("#1aii-operand1-binary").text(normalizedOperand0[0]);
         $("#1aii-operand1-exponent").html("2^<span style='color:red'>" + normalizedOperand0[1] + "</span>");
-        $("#1aii-operand2-binary").text(normalizedOperand0[0]);
+        $("#1aii-operand2-binary").text(normalizedOperand1[0]);
         $("#1aii-operand2-exponent").html("2^<span style='color:red'>" + normalizedOperand1[1] + "</span>");
         let [shiftedOperand0, shiftedOperand1] = compareExponentsThenShift(normalizedOperand0, normalizedOperand1);
         $("#1aiii-operand1-binary").text(shiftedOperand0[0]);
@@ -164,6 +164,23 @@ $(document).ready(function() {
             var [roundedOperand0, roundedOperand1] = RTN_TTE(shiftedOperand0, shiftedOperand1, parseInt(digitsSupported));
             var roundedOperand0 = [roundedOperand0[0], shiftedOperand0[1]];
             var roundedOperand1 = [roundedOperand1[0], shiftedOperand1[1]];
+        }
+
+        if (roundingChoice === "TRUNCATE") {
+            $("#1-perform-title").text("Perform Rounding - Truncate");
+            fileContentSteps = fileContentSteps.concat("    Perform Rounding - Truncate " + "\n");
+            var roundedOperand0 = [shiftedOperand0[0].substr(0, parseInt(digitsSupported) + 1), shiftedOperand0[1]];
+            var roundedOperand1 = [shiftedOperand1[0].substr(0, parseInt(digitsSupported) + 1), shiftedOperand1[1]];
+        }
+
+        if (roundingChoice === "CEIL") {
+            $("#1-perform-title").text("Perform Rounding - Ceiling");
+            fileContentSteps = fileContentSteps.concat("    Perform Rounding - Ceiling " + "\n");
+        }
+
+        if (roundingChoice === "FLOOR") {
+            $("#1-perform-title").text("Perform Rounding - Floor");
+            fileContentSteps = fileContentSteps.concat("    Perform Rounding - Floor " + "\n");
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);

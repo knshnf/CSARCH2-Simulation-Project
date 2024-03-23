@@ -34,14 +34,34 @@
                 </div>
             </div>
 
-            <div class="flex gap-2 flex-col sm:flex-row">
-                <h2 class="text-xl font-medium sm:w-52"> Choice of Rounding: </h2>
+            <div class="flex gap-5 flex-col sm:flex-row">
+                <h2 class="text-xl font-medium sm:w-7/12"> Choice of Rounding: </h2>
 
-                <div class="flex gap-2">
-                    <input type="radio" id="GRS" name="rounding_choice" value="GRS">
-                    <label for="html"> G/R/S </label>
-                    <input type="radio" id="RTN" name="rounding_choice" value="RTN">
-                    <label for="css"> Round to Nearest - Ties to Even </label>
+                <div class="flex flex-col w-full">
+                    <div class="flex gap-2 w-full">
+                        <input type="radio" id="GRS" name="rounding_choice" value="GRS">
+                        <label for="GRS"> G/R/S </label>
+                    </div>
+
+                    <div class="flex gap-2 w-full">
+                        <input type="radio" id="RTN" name="rounding_choice" value="RTN">
+                        <label for="RTN"> Round to Nearest - Ties to Even </label>
+                    </div>
+
+                    <div class="flex gap-2 w-full">
+                        <input type="radio" id="TRUNCATE" name="rounding_choice" value="TRUNCATE">
+                        <label for="TRUNCATE"> Truncate </label>
+                    </div>
+
+                    <div class="flex gap-2 w-full">
+                        <input type="radio" id="CEIL" name="rounding_choice" value="CEIL">
+                        <label for="CEIL"> Ceiling </label>
+                    </div>
+
+                    <div class="flex gap-2 w-full">
+                        <input type="radio" id="FLOOR" name="rounding_choice" value="FLOOR">
+                        <label for="FLOOR"> Floor </label>
+                    </div>
                 </div>
             </div>
 
