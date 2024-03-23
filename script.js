@@ -176,6 +176,44 @@ $(document).ready(function() {
         if (roundingChoice === "CEIL") {
             $("#1-perform-title").text("Perform Rounding - Ceiling");
             fileContentSteps = fileContentSteps.concat("    Perform Rounding - Ceiling " + "\n");
+            let ceiled1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported));
+            let ceiled2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported));
+
+            if(operand1IsNegative) {
+                if(shiftedOperand0[0][parseInt(digitsSupported)] === "1"){
+                    ceiled1 = ceiled1.concat("1");
+
+                    let pointIndex = ceiled1.indexOf('.');
+                    let binaryWithoutPointLength = ceiled1.replace('.', '').length;
+
+                    ceiled1 = addBinary(ceiled1.replace('.', ''), String("1").padStart(binaryWithoutPointLength, '0'));
+                    ceiled1 = ceiled1.substring(0, pointIndex) + '.' + ceiled1.substring(pointIndex);
+                } else {
+                    ceiled1 = ceiled1.concat("1");
+                }
+            } else {
+                ceiled1 = shiftedOperand0[0].substr(0, parseInt(digitsSupported) + 1);
+            }
+
+            // Operand 2
+            if (operand2IsNegative) {
+                if (shiftedOperand1[0][parseInt(digitsSupported)] === "1") {
+                    ceiled2 = ceiled2.concat("1");
+
+                    let pointIndex = ceiled2.indexOf('.');
+                    let binaryWithoutPointLength = ceiled2.replace('.', '').length;
+
+                    ceiled2 = addBinary(ceiled2.replace('.', ''), String("1").padStart(binaryWithoutPointLength, '0'));
+                    ceiled2 = ceiled2.substring(0, pointIndex) + '.' + ceiled2.substring(pointIndex);
+                } else {
+                    ceiled2 = ceiled2.concat("1");
+                }
+            } else {
+                ceiled2 = shiftedOperand1[0].substr(0, parseInt(digitsSupported) + 1);
+            }
+
+            var roundedOperand0 = [ceiled1, shiftedOperand0[1]];
+            var roundedOperand1 = [ceiled2, shiftedOperand1[1]];
         }
 
         if (roundingChoice === "FLOOR") {
