@@ -7,3 +7,5 @@ This simulation project performs IEEE-754 binary-32 floating point addition. It 
 
 ## Video
 
+## Deployment
+https://knshnf.github.io/CSARCH2-Simulation-Project/
