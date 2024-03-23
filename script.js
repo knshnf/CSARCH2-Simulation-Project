@@ -96,6 +96,8 @@ $(document).ready(function() {
             fileContentSteps = fileContentSteps.concat("    Perform RTN-TE " + "\n");
             console.log(shiftedOperand0, shiftedOperand1, digitsSupported);
             var [roundedOperand0, roundedOperand1] = RTN_TTE(shiftedOperand0, shiftedOperand1, parseInt(digitsSupported));
+            var roundedOperand0 = [roundedOperand0[0], shiftedOperand0[1]];
+            var roundedOperand1 = [roundedOperand1[0], shiftedOperand1[1]];
         }
 
         $("#1aiiii-operand1-binary").text(roundedOperand0[0]);
@@ -119,6 +121,7 @@ $(document).ready(function() {
 
         // 3. Normalize
         let normalizedSum = normalize(sum);
+        normalizedSum = [normalizedSum[0], parseInt(normalizedSum[0])];
         $("#3-normalized-binary").text(normalizedSum[0]);
         $("#3-normalized-exponent").text("2^".concat(normalizedSum[1]));
         fileContentSteps = fileContentSteps.concat("3. POST-OPERATION NORMALIZATION " + "\n");
@@ -127,6 +130,7 @@ $(document).ready(function() {
 
         // var roundedSum = roundRTN_TTE(normalizedSum[0], parseInt(digitsSupported));
         var [roundedSum, copy] = RTN_TTE(normalizedSum, normalizedSum, parseInt(digitsSupported));
+        var roundedSum = [roundedSum[0], normalizedSum[1]]
         $("#3-rounded-binary").text(roundedSum[0]);
         $("#3-rounded-exponent").text("2^".concat(roundedSum[1]));
         fileContentSteps = fileContentSteps.concat("    Round to the appropriate number of bits using RTN-TE " + "\n");
@@ -135,7 +139,7 @@ $(document).ready(function() {
         // 4. Final Answer
         $("#4-final-binary").text(roundedSum[0]);
         $("#4-final-exponent").text("2^".concat(roundedSum[1]));
-        $("#final-answer").text(roundedSum[0] + " " + "2^".concat(roundedSum[1]));
+        $("#final-answer").text(roundedSum[0] + " " + "x 2^".concat(roundedSum[1]));
         fileContentSteps = fileContentSteps.concat("4. FINAL ANSWER " + "\n");
         fileContentSteps = fileContentSteps.concat("    " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n");
         fileContent = fileContent.concat("Final Answer: " + roundedSum[0] + " x 2^".concat(roundedSum[1]) + "\n\n\n")
@@ -500,6 +504,10 @@ function RTN_TTE(tuple1, tuple2, bitNum) {
 }
 
 function roundRTN_TTE(tuple, bitNum) {
+    if (tuple.length - 1 === bitNum) {
+        return [tuple, bitNum];
+    }
+
     let index1 = bitNum + 1;
     let index2 = bitNum + 2;
     let resultTuple = "";
